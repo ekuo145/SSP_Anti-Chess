@@ -40,6 +40,13 @@ public class ChessBoard {
         }
     }
 
+    // Method to check if a move is valid based on the piece's movement rules
+    public boolean isValidMove(int startRow, int startCol, int endRow, int endCol) {
+        Piece piece = board[startRow][startCol];
+        if (piece == null) return false;  // No piece at the start
+        return piece.canMove(startRow, startCol, endRow, endCol, board);
+    }
+
     // Print the board
     public void printBoard() {
         for (int row = 0; row < 8; row++) {
