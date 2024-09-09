@@ -3,7 +3,7 @@
 // Define the ChessBoard class
 public class ChessBoard {
     private Piece[][] board = new Piece[8][8];
-    private Piece.Color currentPlayer = Piece.Color.WHITE;
+    private static Piece.Color currentPlayer = Piece.Color.WHITE;
     private boolean gameOver = false;
 
     // Constructor initializes the board with pieces
@@ -139,7 +139,7 @@ public class ChessBoard {
             System.out.println("Move made from (" + startRow + ", " + startCol + ") to (" + endRow + ", " + endCol + ")");
             
             // Switch player after the move
-            CurrentPlayer.switchPlayer();
+            switchPlayer();
     
             // Check if the next player has valid moves or if the game should end
             checkGameEnd();
@@ -195,7 +195,7 @@ public class ChessBoard {
         currentPlayer = (currentPlayer == Piece.Color.WHITE) ? Piece.Color.BLACK : Piece.Color.WHITE;
     }
 
-    private void printTurn() {
+    public static void printTurn() {
         System.out.println("It's " + (currentPlayer == Piece.Color.WHITE ? "White" : "Black") + "'s turn.");
     }
 

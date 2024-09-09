@@ -14,6 +14,6 @@ public class AntichessGame {
 
         System.out.println("Move from (0,1) to (2,2) [Black Knight Two-Square More]: " + chessBoard.isValidMove(0, 1, 2, 2));
 
-        CurrentPlayer.printTurn();
+        ChessBoard.printTurn();
     }
 }
