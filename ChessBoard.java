@@ -130,7 +130,7 @@ public class ChessBoard {
             System.out.println("Game is over. No more moves allowed.");
             return false;
         }
-        
+
         if (isValidMove(startRow, startCol, endRow, endCol)) {
             // Move the piece
             board[endRow][endCol] = board[startRow][startCol];
@@ -191,6 +191,13 @@ public class ChessBoard {
         return false;  // No pieces left for the player
     }
     
+    public void switchPlayer() {
+        currentPlayer = (currentPlayer == Piece.Color.WHITE) ? Piece.Color.BLACK : Piece.Color.WHITE;
+    }
+
+    private void printTurn() {
+        System.out.println("It's " + (currentPlayer == Piece.Color.WHITE ? "White" : "Black") + "'s turn.");
+    }
 
     private void checkGameEnd() {
         // Check if the current player has any valid moves
