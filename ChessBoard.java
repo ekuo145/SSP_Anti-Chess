@@ -1,5 +1,6 @@
 import java.util.Scanner;
 
+
 // Define the ChessBoard class
 public class ChessBoard {
     private Piece[][] board = new Piece[8][8];
@@ -77,14 +78,18 @@ public class ChessBoard {
         // Only allow the current player to move their own pieces
         if (piece.getColor() != currentPlayer) {
             System.out.println("It's not your turn!");
+            System.out.println("It's " + currentPlayer + "'s Turn");
+            System.out.println("You tried to move " + piece.getColor() + "'s piece");
             return false;
         }
     
         boolean hasCapture = hasMandatoryCapture(currentPlayer, board);
+        System.out.println(hasCapture);
     
         // If a capture is mandatory, allow only capturing moves
         if (hasCapture) {
             if (canCapture(piece, startRow, startCol, board)) {
+                System.out.println("A piece has mandatory capture");
                 return piece.isValidMove(startRow, startCol, endRow, endCol, board);
             } else {
                 System.out.println("Capture is mandatory, but this move doesn't capture.");
@@ -92,8 +97,13 @@ public class ChessBoard {
             }
         } else {
             // If no captures are mandatory, allow any valid move according to the piece's rules
-            return piece.isValidMove(startRow, startCol, endRow, endCol, board);
+            System.out.println("A piece doesn't have a mandatory capture");
+            if (!piece.isValidMove(startRow, startCol, endRow, endCol, board)) {
+                System.out.println("This move doesn't follow the move rules");
+                return false;
+            }
         }
+        return true;
     }
     
     
