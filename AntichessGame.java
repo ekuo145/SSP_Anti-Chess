@@ -5,8 +5,9 @@ public class AntichessGame {
 
         // Test movement of a black pawn from (1, 0) to (3, 0)
         System.out.println("Move from (1, 0) to (3, 0) [Black Pawn Two-Square Move]: " + chessBoard.isValidMove(1, 0, 3, 0));  // Should be true (pawn double move)
+        System.out.println("Move from (1, 1) to (3, 1) [Black Pawn Two-Square Move]: " + chessBoard.isValidMove(1, 0, 3, 0));  // Should be true (pawn double move)
 
-        System.out.println("Move from (1, 0) to (2, 0) [Black Pawn One-Square Move]: " + chessBoard.isValidMove(1, 0, 2, 0));  // Should be true (pawn double move)
+        System.out.println("Move from (1, 0) to (2, 0) [Black Pawn One-Square Move]: " + chessBoard.isValidMove(1, 0, 2, 0));  // Should be true (pawn single move)
         
         //problem with pawn movements for some reason
         // Test movement of a white pawn from (6, 0) to (4, 0)

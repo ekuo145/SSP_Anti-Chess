@@ -1,10 +1,13 @@
-
+import java.util.Scanner;
 
 // Define the ChessBoard class
 public class ChessBoard {
     private Piece[][] board = new Piece[8][8];
     private static Piece.Color currentPlayer = Piece.Color.WHITE;
     private boolean gameOver = false;
+
+    //En Passant Logic TBA
+    private int[] enPassantTarget = null;
 
     // Constructor initializes the board with pieces
     public ChessBoard() {
@@ -137,6 +140,11 @@ public class ChessBoard {
             board[startRow][startCol] = null;
     
             System.out.println("Move made from (" + startRow + ", " + startCol + ") to (" + endRow + ", " + endCol + ")");
+
+            if (board[endRow][endCol] instanceof Piece) {
+
+                checkPawnPromotion(endRow, endCol);
+            }
             
             // Switch player after the move
             switchPlayer();
@@ -159,6 +167,50 @@ public class ChessBoard {
         return endPiece != null && startPiece.getColor() != endPiece.getColor();
     }
     
+    private void checkPawnPromotion(int endRow, int endCol) {
+        Piece piece = board[endRow][endCol];
+        if (piece instanceof Piece) {
+            if (piece.getType() == Piece.PieceType.PAWN) {
+            // Check if the pawn has reached the last row (opposite side)
+            if ((piece.getColor() == Piece.Color.WHITE && endRow == 0) || 
+                (piece.getColor() == Piece.Color.BLACK && endRow == 7)) {
+    
+                // Promotion logic - ask the player what they want to promote to
+                String choice = getPromotionChoice(piece.getColor());
+                switch (choice.toUpperCase()) {
+                    case "Q":
+                        board[endRow][endCol] = new Piece(Piece.PieceType.QUEEN, piece.getColor());
+                        break;
+                    case "R":
+                        board[endRow][endCol] = new Piece(Piece.PieceType.ROOK, piece.getColor());
+                        break;
+                    case "B":
+                        board[endRow][endCol] = new Piece(Piece.PieceType.BISHOP, piece.getColor());
+                        break;
+                    case "N":
+                        board[endRow][endCol] = new Piece(Piece.PieceType.KNIGHT, piece.getColor());
+                        break;
+                    case "K":
+                        board[endRow][endCol] = new Piece(Piece.PieceType.KING, piece.getColor());
+                        break;
+                    default:
+                        System.out.println("Invalid choice. Promoting to Queen by default.");
+                        board[endRow][endCol] = new Piece(Piece.PieceType.QUEEN, piece.getColor());
+                        break;
+                }
+                System.out.println("Pawn promoted to " + choice);
+            }
+            }
+        }
+    }
+    
+    // This method asks the player for their promotion choice
+    private String getPromotionChoice(Piece.Color color) {
+        // In a text-based system, prompt the player for input
+        Scanner scanner = new Scanner(System.in);
+        System.out.println("Pawn has reached the other side! Choose a piece to promote to (Q, R, B, N, K):");
+        return scanner.nextLine();
+    }
     
 
     private boolean hasValidMove(Piece.Color playerColor) {
