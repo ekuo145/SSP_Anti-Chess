@@ -146,6 +146,10 @@ public class Piece {
         System.out.println("Move is invalid.");
         return false;
     }
+
+    public boolean isValidMove(int startRow, int startCol, int endRow, int endCol, Piece[][] board) {
+        return false;
+    }
     
     
     
