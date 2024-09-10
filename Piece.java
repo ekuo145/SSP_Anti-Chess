@@ -122,8 +122,8 @@ public class Piece {
     public boolean canMovePawn(int startRow, int startCol, int endRow, int endCol, Piece[][] board) {
         int direction = (color == Color.WHITE) ? -1 : 1;  // White pawns move up (-1), Black pawns move down (+1)
         
-        System.out.println("Checking Pawn Move: startRow = " + startRow + ", startCol = " + startCol + ", endRow = " + endRow + ", endCol = " + endCol);
-        System.out.println("Pawn color: " + color + ", direction: " + direction);
+        // System.out.println("Checking Pawn Move: startRow = " + startRow + ", startCol = " + startCol + ", endRow = " + endRow + ", endCol = " + endCol);
+        // System.out.println("Pawn color: " + color + ", direction: " + direction);
     
         // Moving forward (not capturing)
         if (startCol == endCol) {
@@ -168,7 +168,7 @@ public class Piece {
 
     public boolean isValidMove(int startRow, int startCol, int endRow, int endCol, Piece[][] board) {
         //return false is placeholder, find new logic to make it save a lot more space.
-        return false;
+        return canMove(startRow, startCol, endRow, endCol, board);
     } 
     
     
