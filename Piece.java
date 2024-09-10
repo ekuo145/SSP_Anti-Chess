@@ -28,6 +28,25 @@ public class Piece {
         return color;
     }
 
+    public String getSymbol() {
+        switch (type) {
+            case PAWN:
+                return (color == Color.WHITE) ? "P" : "p";
+            case ROOK:
+                return (color == Color.WHITE) ? "R" : "r";
+            case KNIGHT:
+                return (color == Color.WHITE) ? "N" : "n";
+            case BISHOP:
+                return (color == Color.WHITE) ? "B" : "b";
+            case QUEEN:
+                return (color == Color.WHITE) ? "Q" : "q";
+            case KING:
+                return (color == Color.WHITE) ? "K" : "k";
+            default:
+                return "?";
+        }
+    }
+
     // Method to check if the piece can move from (startRow, startCol) to (endRow, endCol)
     public boolean canMove(int startRow, int startCol, int endRow, int endCol, Piece[][] board) {
         switch (type) {
@@ -49,17 +68,17 @@ public class Piece {
     }
 
     // King moves one square in any direction
-    private boolean canMoveKing(int startRow, int startCol, int endRow, int endCol) {
+    public boolean canMoveKing(int startRow, int startCol, int endRow, int endCol) {
         return Math.abs(startRow - endRow) <= 1 && Math.abs(startCol - endCol) <= 1;
     }
 
     // Queen moves like both a rook and a bishop
-    private boolean canMoveQueen(int startRow, int startCol, int endRow, int endCol, Piece[][] board) {
+    public boolean canMoveQueen(int startRow, int startCol, int endRow, int endCol, Piece[][] board) {
         return canMoveRook(startRow, startCol, endRow, endCol, board) || canMoveBishop(startRow, startCol, endRow, endCol, board);
     }
 
     // Rook moves in straight lines (either row or column must be the same)
-    private boolean canMoveRook(int startRow, int startCol, int endRow, int endCol, Piece[][] board) {
+    public boolean canMoveRook(int startRow, int startCol, int endRow, int endCol, Piece[][] board) {
         if (startRow != endRow && startCol != endCol) return false;
         // Check if path is clear (no pieces between start and end)
         if (startRow == endRow) {  // Horizontal movement
@@ -79,7 +98,7 @@ public class Piece {
     }
 
     // Bishop moves diagonally
-    private boolean canMoveBishop(int startRow, int startCol, int endRow, int endCol, Piece[][] board) {
+    public boolean canMoveBishop(int startRow, int startCol, int endRow, int endCol, Piece[][] board) {
         if (Math.abs(startRow - endRow) != Math.abs(startCol - endCol)) return false;
         // Check if path is clear
         int rowDirection = (endRow > startRow) ? 1 : -1;
@@ -94,13 +113,13 @@ public class Piece {
     }
 
     // Knight moves in an "L" shape
-    private boolean canMoveKnight(int startRow, int startCol, int endRow, int endCol) {
+    public boolean canMoveKnight(int startRow, int startCol, int endRow, int endCol) {
         int rowDiff = Math.abs(startRow - endRow);
         int colDiff = Math.abs(startCol - endCol);
         return (rowDiff == 2 && colDiff == 1) || (rowDiff == 1 && colDiff == 2);
     }
 
-    private boolean canMovePawn(int startRow, int startCol, int endRow, int endCol, Piece[][] board) {
+    public boolean canMovePawn(int startRow, int startCol, int endRow, int endCol, Piece[][] board) {
         int direction = (color == Color.WHITE) ? -1 : 1;  // White pawns move up (-1), Black pawns move down (+1)
         
         System.out.println("Checking Pawn Move: startRow = " + startRow + ", startCol = " + startCol + ", endRow = " + endRow + ", endCol = " + endCol);
@@ -148,9 +167,9 @@ public class Piece {
     }
 
     public boolean isValidMove(int startRow, int startCol, int endRow, int endCol, Piece[][] board) {
+        //return false is placeholder, find new logic to make it save a lot more space.
         return false;
-    }
-    
+    } 
     
     
 

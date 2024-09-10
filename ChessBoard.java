@@ -84,21 +84,21 @@ public class ChessBoard {
         }
     
         boolean hasCapture = hasMandatoryCapture(currentPlayer, board);
-        System.out.println(hasCapture);
+
     
         // If a capture is mandatory, allow only capturing moves
         if (hasCapture) {
             if (canCapture(piece, startRow, startCol, board)) {
                 System.out.println("A piece has mandatory capture");
-                return piece.isValidMove(startRow, startCol, endRow, endCol, board);
+                return piece.canMove(startRow, startCol, endRow, endCol, board);
             } else {
                 System.out.println("Capture is mandatory, but this move doesn't capture.");
                 return false;
             }
         } else {
             // If no captures are mandatory, allow any valid move according to the piece's rules
-            System.out.println("A piece doesn't have a mandatory capture");
-            if (!piece.isValidMove(startRow, startCol, endRow, endCol, board)) {
+            if (!piece.canMove(startRow, startCol, endRow, endCol, board)) {
+                //Problem is that canMove function is not being passed properly
                 System.out.println("This move doesn't follow the move rules");
                 return false;
             }
@@ -128,7 +128,7 @@ public class ChessBoard {
             for (int endCol = 0; endCol < board[endRow].length; endCol++) {
                 // The piece can only capture if there is an opponent's piece at the target location
                 if (board[endRow][endCol] != null && board[endRow][endCol].getColor() != piece.getColor()) {
-                    if (piece.isValidMove(startRow, startCol, endRow, endCol, board)) {
+                    if (piece.canMove(startRow, startCol, endRow, endCol, board)) {
                         System.out.println("Capture available for piece at (" + startRow + ", " + startCol + ")");
                         return true;
                     }
@@ -277,6 +277,49 @@ public class ChessBoard {
             endGame();
             return;
         }
+    }
+    
+    public void startGame() {
+        Scanner scanner = new Scanner(System.in);
+        while (!gameOver) {
+            System.out.println("Current Board:");
+            printBoard();
+    
+            // Indicate whose turn it is
+            System.out.println(currentPlayer + "'s move.");
+    
+            // Get user input for the move
+            System.out.print("Enter your move (e.g., 'e2 e4' or '0 1 2 1'): ");
+            String input = scanner.nextLine();
+            
+            // Parse the input
+            int[] move = parseMoveInput(input);
+            if (move == null) {
+                System.out.println("Invalid move format. Please try again.");
+                continue;
+            }
+    
+                // Make the move
+            movePiece(0, 0, 0, 0);
+        }
+        System.out.println("Game over!");
+        scanner.close();
+    }
+    
+
+    public int[] parseMoveInput(String input) {
+        // Simple format handling like "e2 e4"
+        String[] parts = input.split(" ");
+        if (parts.length != 2) {
+            return null; // Invalid input
+        }
+    
+        int startRow = parts[0].charAt(1) - '1';  // Converts '2' to 1
+        int startCol = parts[0].charAt(0) - 'a';  // Converts 'e' to 4
+        int endRow = parts[1].charAt(1) - '1';
+        int endCol = parts[1].charAt(0) - 'a';
+    
+        return new int[] {startRow, startCol, endRow, endCol};
     }
     
     
