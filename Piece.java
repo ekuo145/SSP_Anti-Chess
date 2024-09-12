@@ -158,9 +158,9 @@ public class Piece {
         
         // Capturing diagonally
         else if (Math.abs(startCol - endCol) == 1 && startRow + direction == endRow) {
-            System.out.println("Attempting diagonal capture...");
+            // System.out.println("Attempting diagonal capture...");
             if (board[endRow][endCol] != null && board[endRow][endCol].getColor() != this.color) {
-                System.out.println("Capture is valid.");
+                // System.out.println("Capture is valid.");
                 return true;
             } else {
                 System.out.println("No valid capture.");

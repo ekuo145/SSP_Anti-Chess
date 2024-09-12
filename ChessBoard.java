@@ -89,10 +89,10 @@ public class ChessBoard {
         // If a capture is mandatory, allow only capturing moves
         if (hasCapture) {
             if (canCapture(piece, startRow, startCol, board)) {
-                System.out.println("A piece has mandatory capture");
+                // System.out.println("A piece has mandatory capture");
                 return piece.canMove(startRow, startCol, endRow, endCol, board);
             } else {
-                System.out.println("Capture is mandatory, but this move doesn't capture.");
+                // System.out.println("Capture is mandatory, but this move doesn't capture.");
                 return false;
             }
         } else {
@@ -129,7 +129,7 @@ public class ChessBoard {
                 // The piece can only capture if there is an opponent's piece at the target location
                 if (board[endRow][endCol] != null && board[endRow][endCol].getColor() != piece.getColor()) {
                     if (piece.canMove(startRow, startCol, endRow, endCol, board)) {
-                        System.out.println("Capture available for piece at (" + startRow + ", " + startCol + ")");
+                        // System.out.println("Capture available for piece at (" + startRow + ", " + startCol + ")");
                         return true;
                     }
                 }
@@ -138,7 +138,12 @@ public class ChessBoard {
         return false;
     }
 
-    public boolean movePiece(int startRow, int startCol, int endRow, int endCol) {
+    public boolean movePiece(int[] move) {
+        int startRow = move[0];
+        int startCol = move[1];
+        int endRow = move[2];
+        int endCol = move[3];
+
         if (gameOver) {
             System.out.println("Game is over. No more moves allowed.");
             return false;
@@ -219,6 +224,7 @@ public class ChessBoard {
         // In a text-based system, prompt the player for input
         Scanner scanner = new Scanner(System.in);
         System.out.println("Pawn has reached the other side! Choose a piece to promote to (Q, R, B, N, K):");
+        scanner.close();
         return scanner.nextLine();
     }
     
@@ -293,44 +299,44 @@ public class ChessBoard {
             String input = scanner.nextLine();
             
             // Parse the input
-            int[] move = parseMoveInput(0, 0, 0, 0);
+            int[] move = parseMoveInput(input);
             if (move == null) {
                 System.out.println("Invalid move format. Please try again.");
                 continue;
             }
     
                 // Make the move
-            movePiece(0, 0, 0, 0);
+            movePiece(move);
         }
         System.out.println("Game over!");
         scanner.close();
     }
     
 
-    // public int[] parseMoveInput(String input) {
-    //     // Simple format handling like "e2 e4"
-    //     String[] parts = input.split(" ");
-    //     if (parts.length != 2) {
-    //         return null; // Invalid input
-    //     }
-    
-    //     int startRow = parts[0].charAt(1) - '1';  // Converts '2' to 1
-    //     int startCol = parts[0].charAt(0) - 'a';  // Converts 'e' to 4
-    //     int endRow = parts[1].charAt(1) - '1';
-    //     int endCol = parts[1].charAt(0) - 'a';
-    
-    //     return new int[] {startRow, startCol, endRow, endCol};
-    // }
-    public int[] parseMoveInput(int startRow, int startCol, int endRow, int endCol) {
-        // Ensure the input values are valid (e.g., within bounds of the board)
-        if (startRow < 0 || startRow > 7 || startCol < 0 || startCol > 7 || 
-            endRow < 0 || endRow > 7 || endCol < 0 || endCol > 7) {
-            return null; // Invalid input, out of bounds
+    public int[] parseMoveInput(String input) {
+        // Simple format handling like "e2 e4"
+        String[] parts = input.split(" ");
+        if (parts.length != 2) {
+            return null; // Invalid input
         }
     
-        // Return the parsed input as an array of integers
+        int startRow = parts[0].charAt(1) - '1';  // Converts '2' to 1
+        int startCol = parts[0].charAt(0) - 'a';  // Converts 'e' to 4
+        int endRow = parts[1].charAt(1) - '1';
+        int endCol = parts[1].charAt(0) - 'a';
+    
         return new int[] {startRow, startCol, endRow, endCol};
     }
+    // public int[] parseMoveInput(int startRow, int startCol, int endRow, int endCol) {
+    //     // Ensure the input values are valid (e.g., within bounds of the board)
+    //     if (startRow < 0 || startRow > 7 || startCol < 0 || startCol > 7 || 
+    //         endRow < 0 || endRow > 7 || endCol < 0 || endCol > 7) {
+    //         return null; // Invalid input, out of bounds
+    //     }
+    
+    //     // Return the parsed input as an array of integers
+    //     return new int[] {startRow, startCol, endRow, endCol};
+    // }
     
     
 
