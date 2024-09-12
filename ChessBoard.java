@@ -293,7 +293,7 @@ public class ChessBoard {
             String input = scanner.nextLine();
             
             // Parse the input
-            int[] move = parseMoveInput(input);
+            int[] move = parseMoveInput(0, 0, 0, 0);
             if (move == null) {
                 System.out.println("Invalid move format. Please try again.");
                 continue;
@@ -307,18 +307,28 @@ public class ChessBoard {
     }
     
 
-    public int[] parseMoveInput(String input) {
-        // Simple format handling like "e2 e4"
-        String[] parts = input.split(" ");
-        if (parts.length != 2) {
-            return null; // Invalid input
+    // public int[] parseMoveInput(String input) {
+    //     // Simple format handling like "e2 e4"
+    //     String[] parts = input.split(" ");
+    //     if (parts.length != 2) {
+    //         return null; // Invalid input
+    //     }
+    
+    //     int startRow = parts[0].charAt(1) - '1';  // Converts '2' to 1
+    //     int startCol = parts[0].charAt(0) - 'a';  // Converts 'e' to 4
+    //     int endRow = parts[1].charAt(1) - '1';
+    //     int endCol = parts[1].charAt(0) - 'a';
+    
+    //     return new int[] {startRow, startCol, endRow, endCol};
+    // }
+    public int[] parseMoveInput(int startRow, int startCol, int endRow, int endCol) {
+        // Ensure the input values are valid (e.g., within bounds of the board)
+        if (startRow < 0 || startRow > 7 || startCol < 0 || startCol > 7 || 
+            endRow < 0 || endRow > 7 || endCol < 0 || endCol > 7) {
+            return null; // Invalid input, out of bounds
         }
     
-        int startRow = parts[0].charAt(1) - '1';  // Converts '2' to 1
-        int startCol = parts[0].charAt(0) - 'a';  // Converts 'e' to 4
-        int endRow = parts[1].charAt(1) - '1';
-        int endCol = parts[1].charAt(0) - 'a';
-    
+        // Return the parsed input as an array of integers
         return new int[] {startRow, startCol, endRow, endCol};
     }
     

@@ -120,14 +120,17 @@ public class Piece {
     }
 
     public boolean canMovePawn(int startRow, int startCol, int endRow, int endCol, Piece[][] board) {
-        int direction = (color == Color.WHITE) ? -1 : 1;  // White pawns move up (-1), Black pawns move down (+1)
+        int direction = (color == Color.WHITE) ? 1 : -1;  // White pawns move up (1), Black pawns move down (-1)
         
         // System.out.println("Checking Pawn Move: startRow = " + startRow + ", startCol = " + startCol + ", endRow = " + endRow + ", endCol = " + endCol);
         // System.out.println("Pawn color: " + color + ", direction: " + direction);
     
         // Moving forward (not capturing)
         if (startCol == endCol) {
-            System.out.println("Attempting forward move...");
+            // System.out.println("Attempting forward move...");
+            // System.out.println("Intermediate square (2, 0): " + board[2][0]);
+            // System.out.println("Target square (3, 0): " + board[3][0]);
+
             if (board[endRow][endCol] == null) {  // Only move forward if the target square is empty
                 System.out.println("End square is empty.");
                 // One square forward move
@@ -136,7 +139,8 @@ public class Piece {
                     return true;
                 }
                 // Two squares forward move
-                else if (startRow == (color == Color.WHITE ? 6 : 1)) {
+                // else if (startRow == (color == Color.WHITE ? 6 : 1)) {
+                else if ((startRow == 1 && color == Color.WHITE) || (startRow == 6 && color == Color.BLACK)) {
                     int intermediateRow = startRow + direction;
                     System.out.println("Intermediate row: " + intermediateRow);
                     if (startRow + 2 * direction == endRow && board[intermediateRow][startCol] == null) {
@@ -146,9 +150,10 @@ public class Piece {
                         System.out.println("Path is blocked or endRow is incorrect for two-square move.");
                     }
                 }
-            } else {
-                System.out.println("End square is occupied.");
-            }
+             } 
+            //else {
+            //     System.out.println("End square is occupied.");
+            // }
         }
         
         // Capturing diagonally
@@ -162,7 +167,7 @@ public class Piece {
             }
         }
     
-        System.out.println("Move is invalid.");
+        // System.out.println("Move is invalid.");
         return false;
     }
 
@@ -170,8 +175,5 @@ public class Piece {
         //return false is placeholder, find new logic to make it save a lot more space.
         return canMove(startRow, startCol, endRow, endCol, board);
     } 
-    
-    
-
 
 }
