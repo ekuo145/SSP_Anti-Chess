@@ -4,6 +4,7 @@ import java.util.Scanner;
 // Define the ChessBoard class
 public class ChessBoard {
     private Piece[][] board = new Piece[8][8];
+    private boolean whiteTurn = true;
     private static Piece.Color currentPlayer = Piece.Color.WHITE;
     private boolean gameOver = false;
 
@@ -88,18 +89,30 @@ public class ChessBoard {
     
         // If a capture is mandatory, allow only capturing moves
         if (hasCapture) {
-            if (canCapture(piece, startRow, startCol, board)) {
-                // System.out.println("A piece has mandatory capture");
-                return piece.canMove(startRow, startCol, endRow, endCol, board);
-            } else {
-                // System.out.println("Capture is mandatory, but this move doesn't capture.");
+            Piece movingPiece = board[startRow][startCol];
+
+            if (movingPiece == null || !movingPiece.canMove(startRow, startCol, endRow, endCol, board)) {
+                System.out.println("Invalid move! You must make a capturing move.");
                 return false;
             }
+            if (board[endRow][endCol] == null || board[endRow][endCol].getColor() == movingPiece.getColor()) {
+                System.out.println("Invalid move! You must make a capturing move.");
+                return false;
+            }
+
+
+            // if (canCapture(piece, startRow, startCol, board)) {
+            //     System.out.println("A piece has mandatory capture" );
+            //     return piece.canMove(startRow, startCol, endRow, endCol, board);
+            // } else {
+            //     System.out.println("Capture is mandatory, but this move doesn't capture.");
+            //     return false;
+            // }
         } else {
             // If no captures are mandatory, allow any valid move according to the piece's rules
             if (!piece.canMove(startRow, startCol, endRow, endCol, board)) {
-                //Problem is that canMove function is not being passed properly
-                System.out.println("This move doesn't follow the move rules");
+                //For some reason it still lets the move go through
+                // System.out.println("This move doesn't follow the move rules");
                 return false;
             }
         }
@@ -109,6 +122,7 @@ public class ChessBoard {
     
 
     public boolean hasMandatoryCapture(Piece.Color currentPlayerColor, Piece[][] board) {
+        
         for (int row = 0; row < board.length; row++) {
             for (int col = 0; col < board[row].length; col++) {
                 Piece piece = board[row][col];
@@ -126,9 +140,9 @@ public class ChessBoard {
         // Check all possible moves for this piece and see if any involve capturing
         for (int endRow = 0; endRow < board.length; endRow++) {
             for (int endCol = 0; endCol < board[endRow].length; endCol++) {
-                // The piece can only capture if there is an opponent's piece at the target location
-                if (board[endRow][endCol] != null && board[endRow][endCol].getColor() != piece.getColor()) {
-                    if (piece.canMove(startRow, startCol, endRow, endCol, board)) {
+                // The piece can only capture if there is an opponent's piece at the target location    
+                    if (board[endRow][endCol] != null && board[endRow][endCol].getColor() != piece.getColor()) {
+                        if (piece.canMove(startRow, startCol, endRow, endCol, board)) {
                         // System.out.println("Capture available for piece at (" + startRow + ", " + startCol + ")");
                         return true;
                     }

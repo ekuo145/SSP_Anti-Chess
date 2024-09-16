@@ -132,7 +132,7 @@ public class Piece {
             // System.out.println("Target square (3, 0): " + board[3][0]);
 
             if (board[endRow][endCol] == null) {  // Only move forward if the target square is empty
-                System.out.println("End square is empty.");
+                // System.out.println("End square is empty.");
                 // One square forward move
                 if (startRow + direction == endRow) {
                     System.out.println("One-square move is valid.");
@@ -142,13 +142,14 @@ public class Piece {
                 // else if (startRow == (color == Color.WHITE ? 6 : 1)) {
                 else if ((startRow == 1 && color == Color.WHITE) || (startRow == 6 && color == Color.BLACK)) {
                     int intermediateRow = startRow + direction;
-                    System.out.println("Intermediate row: " + intermediateRow);
+                    // System.out.println("Intermediate row: " + intermediateRow);
                     if (startRow + 2 * direction == endRow && board[intermediateRow][startCol] == null) {
                         System.out.println("Two-square move is valid.");
                         return true;
-                    } else {
-                        System.out.println("Path is blocked or endRow is incorrect for two-square move.");
-                    }
+                     } 
+                    //  else {
+                    //     // System.out.println("Path is blocked or endRow is incorrect for two-square move.");
+                    // }
                 }
              } 
             //else {
