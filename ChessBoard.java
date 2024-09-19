@@ -49,6 +49,10 @@ public class ChessBoard {
         }
     }
 
+    public Piece[][] getBoard() {
+        return board;
+    }
+
     private void endGame() {
         gameOver = true;
         System.out.println("Thank you for playing! The game has ended.");
