@@ -4,45 +4,63 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 
 public class AntichessUI {
-    private JFrame frame;
-    private JButton[][] boardButtons; // 8x8 grid of buttons representing the board
-    private ChessBoard chessBoard; // The ChessBoard model to manage the game logic
-    private boolean isPieceSelected = false;
-    private int selectedRow = -1;
-    private int selectedCol = -1;
+    private ChessBoard chessBoard;
+    private JButton[][] boardButtons; // 8x8 array of buttons representing the board
+    private int[] selectedSquare = null; // To store the selected square (piece to move)
 
+    // Constructor to set up the UI
     public AntichessUI() {
-        chessBoard = new ChessBoard(); // Initialize the chessboard
-        initializeUI();
+        chessBoard = new ChessBoard(this); // Pass UI reference to the ChessBoard
+        initializeUI(); // Create and set up the GUI
+        chessBoard.startGame(); // Start the game
     }
 
-    // Initialize the main UI components
+    // Method to initialize the UI
     private void initializeUI() {
-        frame = new JFrame("Antichess");
+        JFrame frame = new JFrame("Antichess");
         frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         frame.setSize(600, 600);
-        frame.setLayout(new GridLayout(8, 8)); // 8x8 grid for the chessboard
+        JPanel panel = new JPanel(new GridLayout(8, 8));
 
+        // Create board buttons and set up action listeners
         boardButtons = new JButton[8][8];
-
-        // Initialize board buttons
         for (int row = 0; row < 8; row++) {
             for (int col = 0; col < 8; col++) {
                 JButton button = new JButton();
-                button.setFont(new Font("Arial", Font.BOLD, 24));
                 boardButtons[row][col] = button;
-                frame.add(button);
-                button.addActionListener(new ButtonClickListener(row, col));
+
+                // Add action listener to each button to handle user clicks
+                final int currentRow = row;
+                final int currentCol = col;
+                button.addActionListener(e -> handleBoardClick(currentRow, currentCol));
+
+                panel.add(button); // Add each button to the panel
             }
         }
 
-        updateBoard(); // Draw the initial board setup
+        frame.add(panel);
         frame.setVisible(true);
     }
 
-    // Update the board display based on the current game state
-    private void updateBoard() {
-        Piece[][] board = chessBoard.getBoard(); // Assuming ChessBoard has a getBoard method
+    // Method to handle board button clicks
+    private void handleBoardClick(int row, int col) {
+        if (selectedSquare == null) {
+            // First click: select a piece
+            selectedSquare = new int[]{row, col};
+        } else {
+            // Second click: attempt to move the piece
+            boolean moveSuccessful = chessBoard.handleMove(selectedSquare[0], selectedSquare[1], row, col);
+            if (moveSuccessful) {
+                selectedSquare = null; // Reset after a successful move
+            } else {
+                // Handle invalid move (optional feedback to the user)
+                selectedSquare = null; // Reset after an invalid attempt
+            }
+        }
+    }
+
+    // Method to update the board buttons based on the current state of the chessboard
+    public void updateBoard(Piece[][] board) {
         for (int row = 0; row < 8; row++) {
             for (int col = 0; col < 8; col++) {
                 Piece piece = board[row][col];
@@ -51,41 +69,6 @@ public class AntichessUI {
                 } else {
                     boardButtons[row][col].setText("");
                 }
-            }
-        }
-    }
-
-    // Handle button clicks for piece selection and movement
-    private class ButtonClickListener implements ActionListener {
-        private int row, col;
-
-        public ButtonClickListener(int row, int col) {
-            this.row = row;
-            this.col = col;
-        }
-
-        @Override
-        public void actionPerformed(ActionEvent e) {
-            if (!isPieceSelected) {
-                // First click: select a piece
-                if (chessBoard.getBoard()[row][col] != null) {
-                    isPieceSelected = true;
-                    selectedRow = row;
-                    selectedCol = col;
-                    boardButtons[row][col].setBackground(Color.YELLOW); // Highlight the selected piece
-                }
-            } else {
-                // Second click: move the selected piece
-                if (chessBoard.makeMove(selectedRow, selectedCol, row, col)) {
-                    updateBoard();
-                } else {
-                    System.out.println("Invalid move!");
-                }
-                // Reset selection
-                boardButtons[selectedRow][selectedCol].setBackground(null); // Remove highlight
-                isPieceSelected = false;
-                selectedRow = -1;
-                selectedCol = -1;
             }
         }
     }

@@ -1,5 +1,7 @@
 import java.util.Scanner;
 
+import javax.swing.SwingUtilities;
+
 
 // Define the ChessBoard class
 public class ChessBoard {
@@ -7,12 +9,14 @@ public class ChessBoard {
     private boolean whiteTurn = true;
     private static Piece.Color currentPlayer = Piece.Color.WHITE;
     private boolean gameOver = false;
+    private AntichessUI ui; // Reference to the UI
 
     //En Passant Logic TBA
     private int[] enPassantTarget = null;
 
     // Constructor initializes the board with pieces
-    public ChessBoard() {
+    public ChessBoard(AntichessUI ui) {
+        this.ui = ui;
         setUpPieces();
     }
 
@@ -52,6 +56,7 @@ public class ChessBoard {
     public Piece[][] getBoard() {
         return board;
     }
+
 
     private void endGame() {
         gameOver = true;
@@ -156,11 +161,7 @@ public class ChessBoard {
         return false;
     }
 
-    public boolean movePiece(int[] move) {
-        int startRow = move[0];
-        int startCol = move[1];
-        int endRow = move[2];
-        int endCol = move[3];
+    public boolean movePiece(int startRow, int startCol, int endRow, int endCol) {
 
         if (gameOver) {
             System.out.println("Game is over. No more moves allowed.");
@@ -304,47 +305,43 @@ public class ChessBoard {
     }
     
     public void startGame() {
-        Scanner scanner = new Scanner(System.in);
-        while (!gameOver) {
-            System.out.println("Current Board:");
-            printBoard();
-    
-            // Indicate whose turn it is
-            System.out.println(currentPlayer + "'s move.");
-    
-            // Get user input for the move
-            System.out.print("Enter your move (e.g., 'e2 e4' or '0 1 2 1'): ");
-            String input = scanner.nextLine();
-            
-            // Parse the input
-            int[] move = parseMoveInput(input);
-            if (move == null) {
-                System.out.println("Invalid move format. Please try again.");
-                continue;
-            }
-    
-                // Make the move
-            movePiece(move);
-        }
-        System.out.println("Game over!");
-        scanner.close();
+        ui.updateBoard(board);
     }
     
+    public boolean handleMove(int startRow, int startCol, int endRow, int endCol) {
+        Piece piece = board[startRow][startCol];
 
-    public int[] parseMoveInput(String input) {
-        // Simple format handling like "e2 e4"
-        String[] parts = input.split(" ");
-        if (parts.length != 2) {
-            return null; // Invalid input
+        // Check if it's the current player's turn and if the move is valid
+        if (piece != null && piece.getColor() == currentPlayer && piece.isValidMove(startRow, startCol, endRow, endCol, board)) {
+            board[endRow][endCol] = piece;  // Move the piece
+            board[startRow][startCol] = null;  // Clear the original square
+
+            // Alternate between players
+            currentPlayer = (currentPlayer == Piece.Color.WHITE) ? Piece.Color.BLACK : Piece.Color.WHITE;
+
+            // Update the UI after the move
+            SwingUtilities.invokeLater(() -> ui.updateBoard(board));
+
+            return true;
         }
-    
-        int startRow = parts[0].charAt(1) - '1';  // Converts '2' to 1
-        int startCol = parts[0].charAt(0) - 'a';  // Converts 'e' to 4
-        int endRow = parts[1].charAt(1) - '1';
-        int endCol = parts[1].charAt(0) - 'a';
-    
-        return new int[] {startRow, startCol, endRow, endCol};
+
+        return false;
     }
+
+    // public int[] parseMoveInput(String input) {
+    //     // Simple format handling like "e2 e4"
+    //     String[] parts = input.split(" ");
+    //     if (parts.length != 2) {
+    //         return null; // Invalid input
+    //     }
+    
+    //     int startRow = parts[0].charAt(1) - '1';  // Converts '2' to 1
+    //     int startCol = parts[0].charAt(0) - 'a';  // Converts 'e' to 4
+    //     int endRow = parts[1].charAt(1) - '1';
+    //     int endCol = parts[1].charAt(0) - 'a';
+    
+    //     return new int[] {startRow, startCol, endRow, endCol};
+    // }
     // public int[] parseMoveInput(int startRow, int startCol, int endRow, int endCol) {
     //     // Ensure the input values are valid (e.g., within bounds of the board)
     //     if (startRow < 0 || startRow > 7 || startCol < 0 || startCol > 7 || 

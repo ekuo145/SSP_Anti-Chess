@@ -1,9 +1,8 @@
 public class AntichessGame {
     public static void main(String[] args) {
-        ChessBoard chessBoard = new ChessBoard();
-        // System.out.println("The move [1,0] to [3, 0] is " + chessBoard.isValidMove(1,0,3,0));
-        chessBoard.startGame();
+        // Launch the Antichess UI
+        javax.swing.SwingUtilities.invokeLater(() -> {
+            new AntichessUI(); // Start the UI and the game
+        });
     }
-
-    
 }
