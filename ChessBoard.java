@@ -18,6 +18,7 @@ public class ChessBoard {
     public ChessBoard(AntichessUI ui) {
         this.ui = ui;
         setUpPieces();
+        ui.updateBoard(board);
     }
 
     // Method to set up the pieces

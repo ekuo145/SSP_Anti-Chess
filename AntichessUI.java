@@ -10,8 +10,9 @@ public class AntichessUI {
 
     // Constructor to set up the UI
     public AntichessUI() {
-        chessBoard = new ChessBoard(this); // Pass UI reference to the ChessBoard
         initializeUI(); // Create and set up the GUI
+        chessBoard = new ChessBoard(this); // Pass UI reference to the ChessBoard
+        
         chessBoard.startGame(); // Start the game
     }
 
@@ -74,7 +75,7 @@ public class AntichessUI {
     public void updateBoard(Piece[][] board) {
         for (int row = 0; row < 8; row++) {
             for (int col = 0; col < 8; col++) {
-                Piece piece = board[row][col];
+                Piece piece = board[7 - row][col];;
                  if (piece != null) {
                         int index = piece.getType().ordinal() + (piece.getColor() == Piece.Color.WHITE ? 0 : 6);
                         boardButtons[row][col].setIcon(pieceImages[index]);
