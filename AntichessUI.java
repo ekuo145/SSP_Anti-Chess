@@ -2,6 +2,7 @@ import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.util.ArrayList;
 
 public class AntichessUI {
     private ChessBoard chessBoard;
@@ -58,6 +59,7 @@ public class AntichessUI {
     private void handleBoardClick(int row, int col) {
         if (selectedSquare == null) {
             // First click: select a piece
+            System.out.println("Piece Selected");
             selectedSquare = new int[]{row, col};
         } else {
             // Second click: attempt to move the piece
@@ -67,6 +69,7 @@ public class AntichessUI {
             } else {
                 // Handle invalid move (optional feedback to the user)
                 selectedSquare = null; // Reset after an invalid attempt
+                System.out.println("Move Not Successful");
             }
         }
     }
@@ -75,7 +78,7 @@ public class AntichessUI {
     public void updateBoard(Piece[][] board) {
         for (int row = 0; row < 8; row++) {
             for (int col = 0; col < 8; col++) {
-                Piece piece = board[7 - row][col];;
+                Piece piece = board[row][col];;
                  if (piece != null) {
                         int index = piece.getType().ordinal() + (piece.getColor() == Piece.Color.WHITE ? 0 : 6);
                         boardButtons[row][col].setIcon(pieceImages[index]);
@@ -89,18 +92,45 @@ public class AntichessUI {
     private ImageIcon[] pieceImages = new ImageIcon[12];
 
     private void loadImages() {
-        pieceImages[0] = new ImageIcon("/Users/ekuo25/MyScripts/SSP_Anti-Chess/WhitePawn.png");
-        pieceImages[1] = new ImageIcon("/Users/ekuo25/MyScripts/SSP_Anti-Chess/WhiteRook.png");
-        pieceImages[2] = new ImageIcon("/Users/ekuo25/MyScripts/SSP_Anti-Chess/WhiteKnight.png");
+        pieceImages[0] = new ImageIcon("/Users/ekuo25/MyScripts/SSP_Anti-Chess/WhiteKing.png");
+        pieceImages[1] = new ImageIcon("/Users/ekuo25/MyScripts/SSP_Anti-Chess/WhiteQueen.png");
+        pieceImages[2] = new ImageIcon("/Users/ekuo25/MyScripts/SSP_Anti-Chess/WhiteRook.png");
         pieceImages[3] = new ImageIcon("/Users/ekuo25/MyScripts/SSP_Anti-Chess/WhiteBishop.png");
-        pieceImages[4] = new ImageIcon("/Users/ekuo25/MyScripts/SSP_Anti-Chess/WhiteQueen.png");
-        pieceImages[5] = new ImageIcon("/Users/ekuo25/MyScripts/SSP_Anti-Chess/WhiteKing.png");
-        pieceImages[6] = new ImageIcon("/Users/ekuo25/MyScripts/SSP_Anti-Chess/BlackPawn.png");
-        pieceImages[7] = new ImageIcon("/Users/ekuo25/MyScripts/SSP_Anti-Chess/BlackRook.png");
-        pieceImages[8] = new ImageIcon("/Users/ekuo25/MyScripts/SSP_Anti-Chess/BlackKnight.png");
+        pieceImages[4] = new ImageIcon("/Users/ekuo25/MyScripts/SSP_Anti-Chess/WhiteKnight.png");      
+        pieceImages[5] = new ImageIcon("/Users/ekuo25/MyScripts/SSP_Anti-Chess/WhitePawn.png");
+        pieceImages[6] = new ImageIcon("/Users/ekuo25/MyScripts/SSP_Anti-Chess/BlackKing.png");
+        pieceImages[7] = new ImageIcon("/Users/ekuo25/MyScripts/SSP_Anti-Chess/BlackQueen.png");
+        pieceImages[8] = new ImageIcon("/Users/ekuo25/MyScripts/SSP_Anti-Chess/BlackRook.png");
         pieceImages[9] = new ImageIcon("/Users/ekuo25/MyScripts/SSP_Anti-Chess/BlackBishop.png");
-        pieceImages[10] = new ImageIcon("/Users/ekuo25/MyScripts/SSP_Anti-Chess/BlackQueen.png");
-        pieceImages[11] = new ImageIcon("/Users/ekuo25/MyScripts/SSP_Anti-Chess/BlackKing.png");
+        pieceImages[10] = new ImageIcon("/Users/ekuo25/MyScripts/SSP_Anti-Chess/BlackKnight.png");
+        pieceImages[11] = new ImageIcon("/Users/ekuo25/MyScripts/SSP_Anti-Chess/BlackPawn.png");
+    }
+
+
+
+    // public void highlightMoves(List<int[]> validMoves) {
+    //     // Reset the board first
+    //     resetBoardColors();
+        
+    //     // Highlight the valid moves
+    //     for (int[] move : validMoves) {
+    //         int row = move[0];
+    //         int col = move[1];
+    //         boardButtons[row][col].setBackground(Color.GREEN); // Use green for valid moves
+    //     }
+    // }
+
+    public void resetBoardColors() {
+        for (int row = 0; row < 8; row++) {
+            for (int col = 0; col < 8; col++) {
+                // Reset to default colors (e.g., white and gray for a chessboard pattern)
+                if ((row + col) % 2 == 0) {
+                    boardButtons[row][col].setBackground(Color.WHITE);
+                } else {
+                    boardButtons[row][col].setBackground(Color.GRAY);
+                }
+            }
+        }
     }
 
     public static void main(String[] args) {
