@@ -3,10 +3,6 @@ import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.util.ArrayList;
-import java.awt.image.BufferedImage;
-import javax.imageio.ImageIO;
-import java.io.IOException;
-import java.util.HashMap;
 
 public class AntichessUI {
     private ChessBoard chessBoard;
@@ -66,6 +62,8 @@ public class AntichessUI {
             // First click: select a piece
             System.out.println("Piece Selected");
             selectedSquare = new int[]{row, col};
+            List<int[]> validMoves = chessBoard.getValidMoves(row, col); // Get valid moves for the clicked piece
+            highlightMoves(validMoves); // Highlight the possible moves
         } else {
             // Second click: attempt to move the piece
             boolean moveSuccessful = chessBoard.handleMove(selectedSquare[0], selectedSquare[1], row, col);
@@ -117,19 +115,19 @@ public class AntichessUI {
         return new ImageIcon(scaledImg);
     }
 
-
-
-    // public void highlightMoves(List<int[]> validMoves) {
-    //     // Reset the board first
-    //     resetBoardColors();
+    public void highlightMoves(List<int[]> validMoves) {
+        // Reset the board first
+        resetBoardColors();
         
-    //     // Highlight the valid moves
-    //     for (int[] move : validMoves) {
-    //         int row = move[0];
-    //         int col = move[1];
-    //         boardButtons[row][col].setBackground(Color.GREEN); // Use green for valid moves
-    //     }
-    // }
+        // Highlight the valid moves
+        for (int[] move : validMoves) {
+            int row = move[0];
+            int col = move[1];
+            boardButtons[row][col].setBackground(Color.GREEN); // Use green for valid moves
+        }
+    }
+
+
 
     public void resetBoardColors() {
         for (int row = 0; row < 8; row++) {

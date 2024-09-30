@@ -1,6 +1,9 @@
 import java.util.Scanner;
-
 import javax.swing.SwingUtilities;
+import java.util.List;
+import java.util.ArrayList;
+import javax.swing.JButton;
+import java.awt.Color;
 
 
 // Define the ChessBoard class
@@ -58,6 +61,91 @@ public class ChessBoard {
         return board;
     }
 
+    public List<int[]> getValidMoves(int row, int col) {
+        List<int[]> validMoves = new ArrayList<>();
+        Piece piece = board[row][col];
+        
+        if (piece == null) {
+            return validMoves; // No piece at this location
+        }
+
+        switch (piece.getType()) {
+            case PAWN:
+                validMoves = getPawnMoves(row, col, piece);
+                break;
+            case ROOK:
+                validMoves = getRookMoves(row, col, piece);
+                break;
+            case KNIGHT:
+                validMoves = getKnightMoves(row, col);
+                break;
+            case BISHOP:
+                validMoves = getBishopMoves(row, col, piece);
+                break;
+            case QUEEN:
+                validMoves = getQueenMoves(row, col, piece);
+                break;
+            case KING:
+                validMoves = getKingMoves(row, col, piece);
+                break;
+        }
+
+        return validMoves;
+    }
+
+    private List<int[]> getPawnMoves(int row, int col, Piece piece) {
+        List<int[]> moves = new ArrayList<>();
+        int direction = piece.getColor() == Piece.Color.WHITE ? -1 : 1; // White pawns move up, black down
+
+        // Normal move forward (one square)
+        if (isValidMove(row, col, row + direction, col)) {
+            moves.add(new int[]{row + direction, col});
+        }
+
+        // First move, two squares forward
+        if ((piece.getColor() == Piece.Color.WHITE && row == 6) || (piece.getColor() == Piece.Color.BLACK && row == 1)) {
+        // Pawns can move two squares if they are in their starting position
+            if (isValidMove(row, col, row + 2 * direction, col)) {
+            moves.add(new int[]{row + 2 * direction, col});
+            }
+        }
+
+        // Capture diagonally
+        if (isValidMove(row, col, row + direction, col - 1)) {
+            moves.add(new int[]{row + direction, col - 1});
+        }
+        if (isValidMove(row, col, row + direction, col + 1)) {
+            moves.add(new int[]{row + direction, col + 1});
+        }
+
+        // En passant capture (check if the previous move allows for en passant)
+        if (canCaptureEnPassant(row, col)) {
+        moves.add(new int[]{row + direction, col + 1}); // Example: Add en passant move (to right)
+        moves.add(new int[]{row + direction, col - 1}); // Example: Add en passant move (to left)
+        }
+
+        // Add more complex pawn logic here (e.g., promotion, en passant, double move on first turn)
+
+        return moves;
+    }
+
+    private boolean canCaptureEnPassant(int row, int col) {
+        // Check if the last move was a two-square pawn move and if the target square allows en passant
+        Move lastMove = getLastMove(); // Assuming you have a way to retrieve the last move
+    
+        if (lastMove != null && lastMove.isPawnMove()) {
+            Piece movedPawn = board[lastMove.endRow][lastMove.endCol];
+            // Check if the pawn moved two squares and is next to the current pawn
+            if (movedPawn.getColor() != currentPlayer && Math.abs(lastMove.startRow - lastMove.endRow) == 2) {
+                if (lastMove.endRow == row && (lastMove.endCol == col + 1 || lastMove.endCol == col - 1)) {
+                    // En passant is allowed
+                    return true;
+                }
+            }
+        }
+    
+        return false;
+    }
 
     private void endGame() {
         gameOver = true;
@@ -80,20 +168,6 @@ public class ChessBoard {
     
         Piece piece = board[startRow][startCol];
     
-        // Check if there's a piece at the start position
-        if (piece == null) {
-            System.out.println("No piece at the start position.");
-            return false;
-        }
-    
-        // Only allow the current player to move their own pieces
-        if (piece.getColor() != currentPlayer) {
-            System.out.println("It's not your turn!");
-            System.out.println("It's " + currentPlayer + "'s Turn");
-            System.out.println("You tried to move " + piece.getColor() + "'s piece");
-            return false;
-        }
-    
         boolean hasCapture = hasMandatoryCapture(currentPlayer, board);
 
     
@@ -111,23 +185,22 @@ public class ChessBoard {
             }
 
 
-            // if (canCapture(piece, startRow, startCol, board)) {
-            //     System.out.println("A piece has mandatory capture" );
-            //     return piece.canMove(startRow, startCol, endRow, endCol, board);
-            // } else {
-            //     System.out.println("Capture is mandatory, but this move doesn't capture.");
-            //     return false;
-            // }
+            if (canCapture(piece, startRow, startCol, board)) {
+                System.out.println("A piece has mandatory capture" );
+                return piece.canMove(startRow, startCol, endRow, endCol, board);
+            } else {
+                System.out.println("Capture is mandatory, but this move doesn't capture.");
+                return false;
+            }
         } else {
             // If no captures are mandatory, allow any valid move according to the piece's rules
             if (!piece.canMove(startRow, startCol, endRow, endCol, board)) {
-                //For some reason it still lets the move go through
-                // System.out.println("This move doesn't follow the move rules");
                 return false;
             }
         }
         return true;
     }
+
     
     
 
@@ -160,38 +233,6 @@ public class ChessBoard {
             }
         }
         return false;
-    }
-
-    public boolean movePiece(int startRow, int startCol, int endRow, int endCol) {
-
-        if (gameOver) {
-            System.out.println("Game is over. No more moves allowed.");
-            return false;
-        }
-
-        if (isValidMove(startRow, startCol, endRow, endCol)) {
-            // Move the piece
-            board[endRow][endCol] = board[startRow][startCol];
-            board[startRow][startCol] = null;
-    
-            System.out.println("Move made from (" + startRow + ", " + startCol + ") to (" + endRow + ", " + endCol + ")");
-
-            if (board[endRow][endCol] instanceof Piece) {
-
-                checkPawnPromotion(endRow, endCol);
-            }
-            
-            // Switch player after the move
-            switchPlayer();
-    
-            // Check if the next player has valid moves or if the game should end
-            checkGameEnd();
-            
-            return true;
-        } else {
-            System.out.println("Invalid move. Try again.");
-            return false;
-        }
     }
 
     private boolean isCaptureMove(int startRow, int startCol, int endRow, int endCol) {
@@ -312,13 +353,28 @@ public class ChessBoard {
     public boolean handleMove(int startRow, int startCol, int endRow, int endCol) {
         Piece piece = board[startRow][startCol];
 
+        if (gameOver) {
+            System.out.println("Game is over. No more moves allowed.");
+            return false;
+        }
+
         // Check if it's the current player's turn and if the move is valid
         if (piece != null && piece.getColor() == currentPlayer && piece.isValidMove(startRow, startCol, endRow, endCol, board)) {
             board[endRow][endCol] = piece;  // Move the piece
             board[startRow][startCol] = null;  // Clear the original square
 
+            // Record the move
+            recordMove(startRow, startCol, endRow, endCol, piece);
+
+            if (board[endRow][endCol] instanceof Piece) {
+                checkPawnPromotion(endRow, endCol);
+            }
+
             // Alternate between players
-            currentPlayer = (currentPlayer == Piece.Color.WHITE) ? Piece.Color.BLACK : Piece.Color.WHITE;
+            switchPlayer();
+    
+            // Check if the next player has valid moves or if the game should end
+            checkGameEnd();
 
             // Update the UI after the move
             SwingUtilities.invokeLater(() -> ui.updateBoard(board));
@@ -328,33 +384,6 @@ public class ChessBoard {
 
         return false;
     }
-
-    // public int[] parseMoveInput(String input) {
-    //     // Simple format handling like "e2 e4"
-    //     String[] parts = input.split(" ");
-    //     if (parts.length != 2) {
-    //         return null; // Invalid input
-    //     }
-    
-    //     int startRow = parts[0].charAt(1) - '1';  // Converts '2' to 1
-    //     int startCol = parts[0].charAt(0) - 'a';  // Converts 'e' to 4
-    //     int endRow = parts[1].charAt(1) - '1';
-    //     int endCol = parts[1].charAt(0) - 'a';
-    
-    //     return new int[] {startRow, startCol, endRow, endCol};
-    // }
-    // public int[] parseMoveInput(int startRow, int startCol, int endRow, int endCol) {
-    //     // Ensure the input values are valid (e.g., within bounds of the board)
-    //     if (startRow < 0 || startRow > 7 || startCol < 0 || startCol > 7 || 
-    //         endRow < 0 || endRow > 7 || endCol < 0 || endCol > 7) {
-    //         return null; // Invalid input, out of bounds
-    //     }
-    
-    //     // Return the parsed input as an array of integers
-    //     return new int[] {startRow, startCol, endRow, endCol};
-    // }
-    
-    
 
     // Print the board
     public void printBoard() {
@@ -370,3 +399,19 @@ public class ChessBoard {
         }
     }
 }
+
+private List<Move> moveHistory = new ArrayList<>();
+
+    // Method to return the last move made
+    public Move getLastMove() {
+        if (moveHistory.isEmpty()) {
+            return null; // No moves have been made yet
+        }
+        return moveHistory.get(moveHistory.size() - 1);
+    }
+
+    // Add this method to record a move after it's successfully made
+    private void recordMove(int startRow, int startCol, int endRow, int endCol, Piece piece) {
+        Move move = new Move(startRow, startCol, endRow, endCol, piece);
+        moveHistory.add(move);
+    }
