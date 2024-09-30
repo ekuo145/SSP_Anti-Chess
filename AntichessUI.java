@@ -3,6 +3,10 @@ import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.util.ArrayList;
+import java.awt.image.BufferedImage;
+import javax.imageio.ImageIO;
+import java.io.IOException;
+import java.util.HashMap;
 
 public class AntichessUI {
     private ChessBoard chessBoard;
@@ -34,9 +38,10 @@ public class AntichessUI {
                 boardButtons[row][col] = button;
 
                 if ((row + col) % 2 == 0) {
-                    button.setBackground(Color.WHITE); // Light square
-                } else {
                     button.setBackground(Color.GRAY); // Dark square
+                } else {
+                    button.setBackground(Color.WHITE);// Light square
+                    
                 }
 
                 button.setOpaque(true);
@@ -81,7 +86,7 @@ public class AntichessUI {
                 Piece piece = board[row][col];;
                  if (piece != null) {
                         int index = piece.getType().ordinal() + (piece.getColor() == Piece.Color.WHITE ? 0 : 6);
-                        boardButtons[row][col].setIcon(pieceImages[index]);
+                        boardButtons[row][col].setIcon(scaleImageIcon(pieceImages[index], boardButtons[row][col].getWidth(), boardButtons[row][col].getHeight()));
                 } else {
                         boardButtons[row][col].setIcon(null); // Clear icon for empty squares
                 }
@@ -106,6 +111,12 @@ public class AntichessUI {
         pieceImages[11] = new ImageIcon("/Users/ekuo25/MyScripts/SSP_Anti-Chess/BlackPawn.png");
     }
 
+    private ImageIcon scaleImageIcon(ImageIcon icon, int width, int height) {
+        Image img = icon.getImage();
+        Image scaledImg = img.getScaledInstance(width, height, Image.SCALE_SMOOTH);
+        return new ImageIcon(scaledImg);
+    }
+
 
 
     // public void highlightMoves(List<int[]> validMoves) {
@@ -125,9 +136,9 @@ public class AntichessUI {
             for (int col = 0; col < 8; col++) {
                 // Reset to default colors (e.g., white and gray for a chessboard pattern)
                 if ((row + col) % 2 == 0) {
-                    boardButtons[row][col].setBackground(Color.WHITE);
-                } else {
                     boardButtons[row][col].setBackground(Color.GRAY);
+                } else {
+                    boardButtons[row][col].setBackground(Color.WHITE);
                 }
             }
         }
