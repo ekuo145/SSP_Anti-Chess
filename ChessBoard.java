@@ -1,4 +1,6 @@
 import java.util.Scanner;
+import java.awt.*;
+import javax.swing.JButton;
 import javax.swing.SwingUtilities;
 import java.util.List;
 import java.util.ArrayList;
@@ -10,6 +12,7 @@ public class ChessBoard {
     private static Piece.Color currentPlayer = Piece.Color.WHITE;
     private boolean gameOver = false;
     private AntichessUI ui; // Reference to the UI
+    private JButton[][] boardButtons;
 
     // Constructor initializes the board with pieces
     public ChessBoard(AntichessUI ui) {
@@ -536,6 +539,20 @@ private List<Move> moveHistory = new ArrayList<>();
     private void recordMove(int startRow, int startCol, int endRow, int endCol, Piece piece) {
         Move move = new Move(startRow, startCol, endRow, endCol, piece);
         moveHistory.add(move);
+    }
+
+    public void highlightMoves(List<int[]> validMoves) {
+        // Reset the board first
+        ui.resetBoardColors();
+        System.out.println("Board Colors Reset");
+        
+        // Highlight the valid moves
+        for (int[] move : validMoves) {
+            int row = move[0];
+            int col = move[1];
+            boardButtons[row][col].setBackground(Color.GREEN); // Use green for valid moves
+            System.out.println("Background Colors set to Green");
+        }
     }
 
 }

@@ -1,8 +1,6 @@
 import javax.swing.*;
 import java.awt.*;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
-import java.util.ArrayList;
+import java.util.List;
 
 public class AntichessUI {
     private ChessBoard chessBoard;
@@ -61,8 +59,9 @@ public class AntichessUI {
         if (selectedSquare == null) {
             System.out.println("Piece Selected");
             selectedSquare = new int[]{row, col};
-            List<int[]> validMoves = chessBoard.getValidMoves(row, col); // Get valid moves for the clicked piece
-            highlightMoves(validMoves); // Highlight the possible moves
+            List<int[]> validMoves = chessBoard.getValidMoves(row, col);
+            System.out.println(validMoves);
+            chessBoard.highlightMoves(validMoves);
         } else {
             // Second click: attempt to move the piece
             boolean moveSuccessful = chessBoard.handleMove(selectedSquare[0], selectedSquare[1], row, col);
@@ -112,18 +111,6 @@ public class AntichessUI {
         Image img = icon.getImage();
         Image scaledImg = img.getScaledInstance(width, height, Image.SCALE_SMOOTH);
         return new ImageIcon(scaledImg);
-    }
-
-    public void highlightMoves(List<int[]> validMoves) {
-        // Reset the board first
-        resetBoardColors();
-        
-        // Highlight the valid moves
-        for (int[] move : validMoves) {
-            int row = move[0];
-            int col = move[1];
-            boardButtons[row][col].setBackground(Color.GREEN); // Use green for valid moves
-        }
     }
 
 
