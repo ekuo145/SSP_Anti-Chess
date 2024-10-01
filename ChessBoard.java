@@ -2,14 +2,11 @@ import java.util.Scanner;
 import javax.swing.SwingUtilities;
 import java.util.List;
 import java.util.ArrayList;
-import javax.swing.JButton;
-import java.awt.Color;
 
 
 // Define the ChessBoard class
 public class ChessBoard {
     private Piece[][] board = new Piece[8][8];
-    private boolean whiteTurn = true;
     private static Piece.Color currentPlayer = Piece.Color.WHITE;
     private boolean gameOver = false;
     private AntichessUI ui; // Reference to the UI
@@ -524,7 +521,6 @@ public class ChessBoard {
             System.out.println();
         }
     }
-}
 
 private List<Move> moveHistory = new ArrayList<>();
 
