@@ -59,7 +59,6 @@ public class AntichessUI {
     // Method to handle board button clicks
     private void handleBoardClick(int row, int col) {
         if (selectedSquare == null) {
-            // First click: select a piece
             System.out.println("Piece Selected");
             selectedSquare = new int[]{row, col};
             List<int[]> validMoves = chessBoard.getValidMoves(row, col); // Get valid moves for the clicked piece

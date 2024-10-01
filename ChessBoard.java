@@ -14,9 +14,6 @@ public class ChessBoard {
     private boolean gameOver = false;
     private AntichessUI ui; // Reference to the UI
 
-    //En Passant Logic TBA
-    private int[] enPassantTarget = null;
-
     // Constructor initializes the board with pieces
     public ChessBoard(AntichessUI ui) {
         this.ui = ui;
@@ -77,7 +74,7 @@ public class ChessBoard {
                 validMoves = getRookMoves(row, col, piece);
                 break;
             case KNIGHT:
-                validMoves = getKnightMoves(row, col);
+                validMoves = getKnightMoves(row, col, piece);
                 break;
             case BISHOP:
                 validMoves = getBishopMoves(row, col, piece);
@@ -131,7 +128,7 @@ public class ChessBoard {
 
     private boolean canCaptureEnPassant(int row, int col) {
         // Check if the last move was a two-square pawn move and if the target square allows en passant
-        Move lastMove = getLastMove(); // Assuming you have a way to retrieve the last move
+        Move lastMove = getLastMove();
     
         if (lastMove != null && lastMove.isPawnMove()) {
             Piece movedPawn = board[lastMove.endRow][lastMove.endCol];
@@ -146,6 +143,135 @@ public class ChessBoard {
     
         return false;
     }
+
+    private List<int[]> getRookMoves(int row, int col, Piece piece) {
+        List<int[]> moves = new ArrayList<>();
+        
+        // Directions: up, down, left, right
+        int[][] directions = {{1, 0}, {-1, 0}, {0, 1}, {0, -1}};
+    
+        for (int[] direction : directions) {
+            int newRow = row;
+            int newCol = col;
+            
+            while (true) {
+                newRow += direction[0];
+                newCol += direction[1];
+    
+                if (!isWithinBounds(newRow, newCol)) {
+                    break; // Out of bounds
+                }
+    
+                // If the move is valid (not blocked by a piece of the same color)
+                if (isValidMove(row, col, newRow, newCol)) {
+                    moves.add(new int[]{newRow, newCol});
+    
+                    // Stop if we encounter an opponent's piece (we can capture it)
+                    if (board[newRow][newCol] != null) {
+                        break;
+                    }
+                } else {
+                    break; // Blocked by own piece
+                }
+            }
+        }
+    
+        return moves;
+    }
+    
+
+    private List<int[]> getKnightMoves(int row, int col, Piece piece) {
+        List<int[]> moves = new ArrayList<>();
+        
+        // The possible knight move offsets
+        int[][] knightMoves = {
+            {2, 1}, {2, -1}, {-2, 1}, {-2, -1}, // Vertical "L" moves
+            {1, 2}, {1, -2}, {-1, 2}, {-1, -2}  // Horizontal "L" moves
+        };
+        
+        // Iterate over all possible knight moves
+        for (int[] move : knightMoves) {
+            int newRow = row + move[0];
+            int newCol = col + move[1];
+    
+            // Check if the move is within the board bounds and is valid
+            if (isWithinBounds(newRow, newCol) && isValidMove(row, col, newRow, newCol)) {
+                moves.add(new int[]{newRow, newCol});
+            }
+        }
+    
+        return moves;
+    }
+    
+    private List<int[]> getBishopMoves(int row, int col, Piece piece) {
+        List<int[]> moves = new ArrayList<>();
+        
+        // Directions: top-left, top-right, bottom-left, bottom-right
+        int[][] directions = {{1, 1}, {1, -1}, {-1, 1}, {-1, -1}};
+    
+        for (int[] direction : directions) {
+            int newRow = row;
+            int newCol = col;
+    
+            while (true) {
+                newRow += direction[0];
+                newCol += direction[1];
+    
+                if (!isWithinBounds(newRow, newCol)) {
+                    break; // Out of bounds
+                }
+    
+                // If the move is valid (not blocked by a piece of the same color)
+                if (isValidMove(row, col, newRow, newCol)) {
+                    moves.add(new int[]{newRow, newCol});
+    
+                    // Stop if we encounter an opponent's piece (we can capture it)
+                    if (board[newRow][newCol] != null) {
+                        break;
+                    }
+                } else {
+                    break; // Blocked by own piece
+                }
+            }
+        }
+    
+        return moves;
+    }
+
+    private List<int[]> getQueenMoves(int row, int col, Piece piece) {
+        List<int[]> moves = new ArrayList<>();
+    
+        // Queen moves are a combination of rook and bishop moves
+        moves.addAll(getRookMoves(row, col, piece)); // Add Rook's horizontal and vertical moves
+        moves.addAll(getBishopMoves(row, col, piece)); // Add Bishop's diagonal moves
+    
+        return moves;
+    }
+
+    private List<int[]> getKingMoves(int row, int col, Piece piece) {
+        List<int[]> moves = new ArrayList<>();
+        
+        // Directions: all 8 possible directions (vertical, horizontal, diagonal)
+        int[][] kingMoves = {
+            {1, 0}, {-1, 0}, {0, 1}, {0, -1},  // Vertical and horizontal
+            {1, 1}, {1, -1}, {-1, 1}, {-1, -1} // Diagonal
+        };
+    
+        for (int[] move : kingMoves) {
+            int newRow = row + move[0];
+            int newCol = col + move[1];
+    
+            // Check if the move is within bounds and valid
+            if (isWithinBounds(newRow, newCol) && isValidMove(row, col, newRow, newCol)) {
+                moves.add(new int[]{newRow, newCol});
+            }
+        }
+    
+        return moves;
+    }
+    
+    
+    
 
     private void endGame() {
         gameOver = true;
@@ -415,3 +541,5 @@ private List<Move> moveHistory = new ArrayList<>();
         Move move = new Move(startRow, startCol, endRow, endCol, piece);
         moveHistory.add(move);
     }
+
+}
