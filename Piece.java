@@ -141,12 +141,14 @@ public class Piece {
                     if (startRow + 2 * direction == endRow && board[intermediateRow][startCol] == null) {
                         System.out.println("Two-square move is valid.");
                         return true;
-                     } else {
-                        System.out.println("Invalid two-square move: end row is not correct.");
-                    }
-                } else {
-                    System.out.println("Invalid two-square move: path is blocked or out of bounds.");
-                }
+                     } 
+                     //else {
+                    //     System.out.println("Invalid two-square move: end row is not correct.");
+                    // }
+                } 
+                // else {
+                //     System.out.println("Invalid two-square move: path is blocked or out of bounds.");
+                // }
              } 
         }
         

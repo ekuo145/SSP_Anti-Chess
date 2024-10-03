@@ -491,6 +491,8 @@ public class ChessBoard {
             // Record the move
             recordMove(startRow, startCol, endRow, endCol, piece);
 
+            printBoard();
+
             if (board[endRow][endCol] instanceof Piece) {
                 checkPawnPromotion(endRow, endCol);
             }
@@ -543,7 +545,7 @@ private List<Move> moveHistory = new ArrayList<>();
     public void highlightMoves(List<int[]> validMoves) {
         // Reset the board first
         ui.resetBoardColors();
-        System.out.println("Board Colors Reset");
+        // System.out.println("Board Colors Reset");
         
         // Highlight the valid moves
         for (int[] move : validMoves) {

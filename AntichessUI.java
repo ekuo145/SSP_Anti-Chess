@@ -81,7 +81,7 @@ public class AntichessUI {
             for (int col = 0; col < 8; col++) {
                 Piece piece = board[row][col];;
                  if (piece != null) {
-                        int index = piece.getType().ordinal() + (piece.getColor() == Piece.Color.WHITE ? 0 : 6);
+                        int index = piece.getType().ordinal() + (piece.getColor() == Piece.Color.WHITE ? 0 : 6); //don't really understand this part, could be what is causing display issues
                         boardButtons[row][col].setIcon(scaleImageIcon(pieceImages[index], boardButtons[row][col].getWidth(), boardButtons[row][col].getHeight()));
                 } else {
                         boardButtons[row][col].setIcon(null); // Clear icon for empty squares
