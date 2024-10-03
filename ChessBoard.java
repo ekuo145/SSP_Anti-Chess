@@ -302,11 +302,11 @@ public class ChessBoard {
             Piece movingPiece = board[startRow][startCol];
 
             if (movingPiece == null || !movingPiece.canMove(startRow, startCol, endRow, endCol, board)) {
-                System.out.println("Invalid move! You must make a capturing move.");
+                // System.out.println("Invalid move! You must make a capturing move.");
                 return false;
             }
             if (board[endRow][endCol] == null || board[endRow][endCol].getColor() == movingPiece.getColor()) {
-                System.out.println("Invalid move! You must make a capturing move.");
+                // System.out.println("Invalid move! You must make a capturing move.");
                 return false;
             }
 
@@ -330,8 +330,7 @@ public class ChessBoard {
     
     
 
-    public boolean hasMandatoryCapture(Piece.Color currentPlayerColor, Piece[][] board) {
-        
+    public boolean hasMandatoryCapture(Piece.Color currentPlayerColor, Piece[][] board) { 
         for (int row = 0; row < board.length; row++) {
             for (int col = 0; col < board[row].length; col++) {
                 Piece piece = board[row][col];
