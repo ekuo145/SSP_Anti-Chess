@@ -19,14 +19,33 @@ public class AntichessUI {
     private void initializeUI() {
         JFrame frame = new JFrame("Antichess");
         frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-        frame.setSize(600, 600);
-        JPanel panel = new JPanel(new GridLayout(8, 8));
+        frame.setSize(700, 700); // Adjust to fit the board and labels snugly
+        frame.setLayout(new BorderLayout());
 
-        loadImages();
-
+        JPanel boardPanel = new JPanel(new GridLayout(9,9));
         // Create board buttons and set up action listeners
         boardButtons = new JButton[8][8];
+
+        // Add the top-left empty corner
+        boardPanel.add(new JLabel("")); // Top-left corner is empty
+
+        char[] columns = {'a', 'b', 'c', 'd', 'e', 'f', 'g', 'h'};
+        for (char column : columns) {
+            JLabel colLabel = new JLabel(Character.toString(column), SwingConstants.CENTER);
+            colLabel.setPreferredSize(new Dimension(80, 80)); // Adjust to match button size
+            boardPanel.add(colLabel); // Add to the top row
+        }
+
+        loadImages();
+        
+        
+        // Add row labels and board buttons
         for (int row = 0; row < 8; row++) {
+            // Add row label on the left side
+            JLabel rowLabel = new JLabel(Integer.toString(8 - row), SwingConstants.CENTER); // Row label (reverse order)
+            rowLabel.setPreferredSize(new Dimension(80, 80)); // Adjust size to match the board buttons
+            boardPanel.add(rowLabel);
+
             for (int col = 0; col < 8; col++) {
                 JButton button = new JButton();
                 boardButtons[row][col] = button;
@@ -40,17 +59,18 @@ public class AntichessUI {
 
                 button.setOpaque(true);
                 button.setBorderPainted(false);
+                button.setPreferredSize(new Dimension(80, 80)); // Make sure the buttons are square and compact
 
                 // Add action listener to each button to handle user clicks
                 final int currentRow = row;
                 final int currentCol = col;
                 button.addActionListener(e -> handleBoardClick(currentRow, currentCol));
 
-                panel.add(button); // Add each button to the panel
+                boardPanel.add(button);
             }
         }
 
-        frame.add(panel);
+        frame.add(boardPanel);
         frame.setVisible(true);
     }
 
