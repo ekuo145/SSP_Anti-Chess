@@ -6,6 +6,8 @@ public class AntichessUI {
     private ChessBoard chessBoard;
     private JButton[][] boardButtons; // 8x8 array of buttons representing the board
     private int[] selectedSquare = null; // To store the selected square (piece to move)
+    private JTextArea moveHistoryArea; // Text area to store and display the move history
+    private JScrollPane scrollPane;    // Scroll pane to allow scrolling through move history
 
     // Constructor to set up the UI
     public AntichessUI() {
@@ -19,9 +21,10 @@ public class AntichessUI {
     private void initializeUI() {
         JFrame frame = new JFrame("Antichess");
         frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-        frame.setSize(700, 700); // Adjust to fit the board and labels snugly
+        frame.setSize(1000, 800); // Adjust to fit the board and labels snugly
         frame.setLayout(new BorderLayout());
 
+        JPanel mainPanel = new JPanel(new BorderLayout()); // Use BorderLayout for main panel
         JPanel boardPanel = new JPanel(new GridLayout(9,9));
         // Create board buttons and set up action listeners
         boardButtons = new JButton[8][8];
@@ -42,7 +45,7 @@ public class AntichessUI {
         // Add row labels and board buttons
         for (int row = 0; row < 8; row++) {
             // Add row label on the left side
-            JLabel rowLabel = new JLabel(Integer.toString(8 - row), SwingConstants.CENTER); // Row label (reverse order)
+            JLabel rowLabel = new JLabel(Integer.toString(1 + row), SwingConstants.CENTER); // Row label (reverse order)
             rowLabel.setPreferredSize(new Dimension(80, 80)); // Adjust size to match the board buttons
             boardPanel.add(rowLabel);
 
@@ -70,7 +73,20 @@ public class AntichessUI {
             }
         }
 
-        frame.add(boardPanel);
+        // Create and set up the move history area
+        moveHistoryArea = new JTextArea(15, 20); // 15 rows, 20 columns for display
+        moveHistoryArea.setEditable(false); // Users cannot edit move history
+        moveHistoryArea.setFont(new Font("Arial", Font.PLAIN, 12)); // Set font style
+
+        // Add a scroll pane for the move history area
+        scrollPane = new JScrollPane(moveHistoryArea);
+        scrollPane.setVerticalScrollBarPolicy(ScrollPaneConstants.VERTICAL_SCROLLBAR_ALWAYS);
+
+        // Add components to the main panel
+        mainPanel.add(boardPanel, BorderLayout.CENTER); // Add the board to the center
+        mainPanel.add(scrollPane, BorderLayout.EAST);   // Add move history to the right
+
+        frame.add(mainPanel);
         frame.setVisible(true);
     }
 
@@ -86,6 +102,8 @@ public class AntichessUI {
             // Second click: attempt to move the piece
             boolean moveSuccessful = chessBoard.handleMove(selectedSquare[0], selectedSquare[1], row, col);
             if (moveSuccessful) {
+                // Update the move history after a successful move
+                addMoveToHistory(selectedSquare[0], selectedSquare[1], row, col);
                 selectedSquare = null; // Reset after a successful move
             } else {
                 // Handle invalid move (optional feedback to the user)
@@ -146,6 +164,12 @@ public class AntichessUI {
                 }
             }
         }
+    }
+
+    private void addMoveToHistory(int startRow, int startCol, int endRow, int endCol) {
+        char[] columns = {'a', 'b', 'c', 'd', 'e', 'f', 'g', 'h'};
+        String move = String.format("%s%d -> %s%d", columns[startCol], 1 + startRow, columns[endCol], 1 + endRow);
+        moveHistoryArea.append(move + "\n"); // Append move to history area
     }
 
     public static void main(String[] args) {
