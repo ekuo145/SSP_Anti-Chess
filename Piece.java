@@ -99,6 +99,7 @@ public class Piece {
 
     // Bishop moves diagonally
     public boolean canMoveBishop(int startRow, int startCol, int endRow, int endCol, Piece[][] board) {
+        if (Math.abs(startRow - endRow) == 0 || Math.abs(startCol - endCol) == 0) return false;
         if (Math.abs(startRow - endRow) != Math.abs(startCol - endCol)) return false;
         // Check if path is clear
         int rowDirection = (endRow > startRow) ? 1 : -1;
