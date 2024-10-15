@@ -133,14 +133,14 @@ public class Piece {
             if (board[endRow][endCol] == null) {  // Only move forward if the target square is empty
                 // One square forward move
                 if (startRow + direction == endRow) {
-                    System.out.println("One-square move is valid.");
+                    // System.out.println("One-square move is valid.");
                     return true;
                 }
                 // Two squares forward move
                 else if ((startRow == 1 && color == Color.WHITE) || (startRow == 6 && color == Color.BLACK)) {
                     int intermediateRow = startRow + direction;
                     if (startRow + 2 * direction == endRow && board[intermediateRow][startCol] == null) {
-                        System.out.println("Two-square move is valid.");
+                        // System.out.println("Two-square move is valid.");
                         return true;
                      } 
                      //else {

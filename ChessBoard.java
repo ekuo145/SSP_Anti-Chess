@@ -311,20 +311,13 @@ public class ChessBoard {
             }
 
 
-            if (canCapture(piece, startRow, startCol, board)) {
-                System.out.println("A piece has mandatory capture" );
-                return piece.canMove(startRow, startCol, endRow, endCol, board);
-            } else {
-                System.out.println("Capture is mandatory, but this move doesn't capture.");
+            if (!isCaptureMove(startRow, startCol, endRow, endCol)) {
+                System.out.println("A capture is mandatory! You must capture an opponent's piece.");
                 return false;
             }
-        } else {
-            // If no captures are mandatory, allow any valid move according to the piece's rules
-            if (!piece.canMove(startRow, startCol, endRow, endCol, board)) {
-                return false;
-            }
-        }
-        return true;
+        } 
+        // Check if the piece can legally move to the target square
+        return piece != null && piece.canMove(startRow, startCol, endRow, endCol, board);
     }
 
     
@@ -491,7 +484,7 @@ public class ChessBoard {
             // Record the move
             recordMove(startRow, startCol, endRow, endCol, piece);
 
-            printBoard();
+            // printBoard();
 
             if (board[endRow][endCol] instanceof Piece) {
                 checkPawnPromotion(endRow, endCol);
