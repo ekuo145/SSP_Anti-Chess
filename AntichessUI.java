@@ -174,13 +174,49 @@ public class AntichessUI {
 
     private void addMoveToHistory(int startRow, int startCol, int endRow, int endCol) {
         char[] columns = {'a', 'b', 'c', 'd', 'e', 'f', 'g', 'h'};
-        String move = String.format("%s%d -> %s%d", columns[startCol], 1 + startRow, columns[endCol], 1 + endRow);
+        Piece movingPiece = chessBoard.getPieceAt(startRow, startCol);
+        Piece targetPiece = chessBoard.getPieceAt(endRow, endCol); // Piece at the destination square
+        StringBuilder move = new StringBuilder();
+        
+
+        if (movingPiece != null && movingPiece.getType() != Piece.PieceType.PAWN) {
+            switch (movingPiece.getType()) {
+                case KING:
+                    move.append("K");
+                    break;
+                case QUEEN:
+                    move.append("Q");
+                    break;
+                case ROOK:
+                    move.append("R");
+                    break;
+                case BISHOP:
+                    move.append("B");
+                    break;
+                case KNIGHT:
+                    move.append("N");
+                    break;
+                default:
+                    break;
+            }
+        }
+
+        // If a capture is made, add "x" to the move notation
+        if (targetPiece != null) {
+            move.append(columns[startCol]).append(1 + startRow).append("x"); // "x" for capture
+        }
+        else {
+            move.append(columns[startCol]).append(1 + startRow).append("->");
+    }
+
+        // Continue with the move destination notation
+        move.append(columns[endCol]).append(1 + endRow);
         // Add the move to the appropriate column (White or Black)
         if (isWhiteTurn) {
             tableModel.addRow(new Object[]{move, ""}); // Add move to White's column
         } else {
-            int rowCount = tableModel.getRowCount();
-            tableModel.setValueAt(move, rowCount - 1, 1); // Add move to Black's column
+            int lastRow = tableModel.getRowCount() - 1;
+            tableModel.setValueAt(move.toString(), lastRow, 1);
         }   
         isWhiteTurn = !isWhiteTurn; // Toggle turn
     }

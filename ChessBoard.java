@@ -540,4 +540,11 @@ private List<Move> moveHistory = new ArrayList<>();
         }
     }
 
+    public Piece getPieceAt(int row, int col) {
+        if (row < 0 || row >= 8 || col < 0 || col >= 8) {
+            throw new IllegalArgumentException("Row and column must be between 0 and 7.");
+        }
+        return board[row][col]; // Return the piece at the specified row and column
+    }
+
 }
