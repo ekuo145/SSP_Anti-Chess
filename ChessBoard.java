@@ -293,31 +293,19 @@ public class ChessBoard {
         }
     
         Piece piece = board[startRow][startCol];
+
+        if (piece != null && piece.canMove(startRow, startCol, endRow, endCol, board)) {
+            boolean hasCapture = hasMandatoryCapture(currentPlayer, board);
+
+            if (hasCapture && !isCaptureMove(startRow, startCol, endRow, endCol)) {
+                System.out.println("Capture is mandatory, but this move doesn't capture.");
+                return false;
+            }
     
-        boolean hasCapture = hasMandatoryCapture(currentPlayer, board);
+            return true;  // The move is valid
+        }   
 
-    
-        // If a capture is mandatory, allow only capturing moves
-        if (hasCapture) {
-            Piece movingPiece = board[startRow][startCol];
-
-            if (movingPiece == null || !movingPiece.canMove(startRow, startCol, endRow, endCol, board)) {
-                // System.out.println("Invalid move! You must make a capturing move.");
-                return false;
-            }
-            if (board[endRow][endCol] == null || board[endRow][endCol].getColor() == movingPiece.getColor()) {
-                // System.out.println("Invalid move! You must make a capturing move.");
-                return false;
-            }
-
-
-            if (!isCaptureMove(startRow, startCol, endRow, endCol)) {
-                System.out.println("A capture is mandatory! You must capture an opponent's piece.");
-                return false;
-            }
-        } 
-        // Check if the piece can legally move to the target square
-        return piece != null && piece.canMove(startRow, startCol, endRow, endCol, board);
+    return false;
     }
 
     
@@ -477,7 +465,7 @@ public class ChessBoard {
         }
 
         // Check if it's the current player's turn and if the move is valid
-        if (piece != null && piece.getColor() == currentPlayer && piece.isValidMove(startRow, startCol, endRow, endCol, board)) {
+        if (piece != null && piece.getColor() == currentPlayer && isValidMove(startRow, startCol, endRow, endCol)) {
             board[endRow][endCol] = piece;  // Move the piece
             board[startRow][startCol] = null;  // Clear the original square
 
@@ -486,9 +474,7 @@ public class ChessBoard {
 
             // printBoard();
 
-            if (board[endRow][endCol] instanceof Piece) {
-                checkPawnPromotion(endRow, endCol);
-            }
+            checkPawnPromotion(endRow, endCol);
 
             // Alternate between players
             switchPlayer();
@@ -499,9 +485,14 @@ public class ChessBoard {
             // Update the UI after the move
             SwingUtilities.invokeLater(() -> ui.updateBoard(board));
 
-            return true;
+            boolean hasCapture = hasMandatoryCapture(currentPlayer, board);
+                if (hasCapture) {
+            System.out.println("Next player has a mandatory capture.");
         }
 
+        return true;
+        }
+        System.out.println("Invalid move.");
         return false;
     }
 

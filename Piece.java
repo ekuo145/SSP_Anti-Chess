@@ -156,6 +156,7 @@ public class Piece {
         // Capturing diagonally
         else if (Math.abs(startCol - endCol) == 1 && startRow + direction == endRow) {
             if (board[endRow][endCol] != null && board[endRow][endCol].getColor() != this.color) {
+                System.out.println("Valid Capture");
                 return true;
             } else {
                 System.out.println("No valid capture.");
@@ -164,9 +165,5 @@ public class Piece {
         return false;
     }
 
-    public boolean isValidMove(int startRow, int startCol, int endRow, int endCol, Piece[][] board) {
-        //return false is placeholder, find new logic to make it save a lot more space.
-        return canMove(startRow, startCol, endRow, endCol, board);
-    } 
 
 }
