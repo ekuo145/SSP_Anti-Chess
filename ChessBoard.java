@@ -341,7 +341,7 @@ public class ChessBoard {
         return false;
     }
 
-    private boolean isCaptureMove(int startRow, int startCol, int endRow, int endCol) {
+    public boolean isCaptureMove(int startRow, int startCol, int endRow, int endCol) {
         Piece startPiece = board[startRow][startCol];
         Piece endPiece = board[endRow][endCol];
     

@@ -1,4 +1,5 @@
 import javax.swing.*;
+import javax.swing.table.DefaultTableModel;
 import java.awt.*;
 import java.util.List;
 
@@ -6,8 +7,9 @@ public class AntichessUI {
     private ChessBoard chessBoard;
     private JButton[][] boardButtons; // 8x8 array of buttons representing the board
     private int[] selectedSquare = null; // To store the selected square (piece to move)
-    private JTextArea moveHistoryArea; // Text area to store and display the move history
-    private JScrollPane scrollPane;    // Scroll pane to allow scrolling through move history
+    private JTable moveHistoryTable; // Table for move history
+    private DefaultTableModel tableModel; // Model for the move history table   
+    private boolean isWhiteTurn = true; // Track whose turn it is
 
     // Constructor to set up the UI
     public AntichessUI() {
@@ -73,18 +75,22 @@ public class AntichessUI {
             }
         }
 
-        // Create and set up the move history area
-        moveHistoryArea = new JTextArea(15, 20); // 15 rows, 20 columns for display
-        moveHistoryArea.setEditable(false); // Users cannot edit move history
-        moveHistoryArea.setFont(new Font("Arial", Font.PLAIN, 12)); // Set font style
+        // Create and set up the move history table
+        String[] columnNames = {"White", "Black"};
+        tableModel = new DefaultTableModel(columnNames, 0);
+        moveHistoryTable = new JTable(tableModel);
 
-        // Add a scroll pane for the move history area
-        scrollPane = new JScrollPane(moveHistoryArea);
-        scrollPane.setVerticalScrollBarPolicy(ScrollPaneConstants.VERTICAL_SCROLLBAR_ALWAYS);
+        moveHistoryTable.setPreferredScrollableViewportSize(new Dimension(150, 400)); // Adjust the width for a narrower look
+        moveHistoryTable.setFillsViewportHeight(true); // Table fills the height of its viewport
 
-        // Add components to the main panel
-        mainPanel.add(boardPanel, BorderLayout.CENTER); // Add the board to the center
-        mainPanel.add(scrollPane, BorderLayout.EAST);   // Add move history to the right
+        // Adjust column widths to make the table narrower
+        moveHistoryTable.getColumnModel().getColumn(0).setPreferredWidth(70); // Width for White's moves
+        moveHistoryTable.getColumnModel().getColumn(1).setPreferredWidth(70); // Width for Black's moves
+
+        JScrollPane scrollPane = new JScrollPane(moveHistoryTable);
+
+        mainPanel.add(boardPanel, BorderLayout.CENTER);
+        mainPanel.add(scrollPane, BorderLayout.EAST);
 
         frame.add(mainPanel);
         frame.setVisible(true);
@@ -169,7 +175,14 @@ public class AntichessUI {
     private void addMoveToHistory(int startRow, int startCol, int endRow, int endCol) {
         char[] columns = {'a', 'b', 'c', 'd', 'e', 'f', 'g', 'h'};
         String move = String.format("%s%d -> %s%d", columns[startCol], 1 + startRow, columns[endCol], 1 + endRow);
-        moveHistoryArea.append(move + "\n"); // Append move to history area
+        // Add the move to the appropriate column (White or Black)
+        if (isWhiteTurn) {
+            tableModel.addRow(new Object[]{move, ""}); // Add move to White's column
+        } else {
+            int rowCount = tableModel.getRowCount();
+            tableModel.setValueAt(move, rowCount - 1, 1); // Add move to Black's column
+        }   
+        isWhiteTurn = !isWhiteTurn; // Toggle turn
     }
 
     public static void main(String[] args) {
