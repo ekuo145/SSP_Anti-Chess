@@ -103,7 +103,7 @@ public class AntichessUI {
             selectedSquare = new int[]{row, col};
             List<int[]> validMoves = chessBoard.getValidMoves(row, col);
             System.out.println(validMoves);
-            chessBoard.highlightMoves(validMoves);
+            highlightMoves(validMoves);
         } else {
             // Second click: attempt to move the piece
             boolean moveSuccessful = chessBoard.handleMove(selectedSquare[0], selectedSquare[1], row, col);
@@ -219,6 +219,20 @@ public class AntichessUI {
             tableModel.setValueAt(move.toString(), lastRow, 1);
         }   
         isWhiteTurn = !isWhiteTurn; // Toggle turn
+    }
+
+    public void highlightMoves(List<int[]> validMoves) {
+        // Reset the board first
+        resetBoardColors();
+        // System.out.println("Board Colors Reset");
+        
+        // Highlight the valid moves
+        for (int[] move : validMoves) {
+            int row = move[0];
+            int col = move[1];
+            boardButtons[row][col].setBackground(Color.GREEN); // Use green for valid moves
+            System.out.println("Background Colors set to Green");
+        }
     }
 
     public static void main(String[] args) {
