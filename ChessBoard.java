@@ -166,8 +166,6 @@ public class ChessBoard {
                     if (board[newRow][newCol] != null) {
                         break;
                     }
-                } else {
-                    break; // Blocked by own piece
                 }
             }
         }
@@ -224,8 +222,6 @@ public class ChessBoard {
                     if (board[newRow][newCol] != null) {
                         break;
                     }
-                } else {
-                    break; // Blocked by own piece
                 }
             }
         }
@@ -440,7 +436,7 @@ public class ChessBoard {
         // Check if the current player has any valid moves
         if (!hasValidMove(currentPlayer)) {
             System.out.println("Player " + (currentPlayer == Piece.Color.WHITE ? "White" : "Black") + " has no valid moves left!");
-            System.out.println("Game over! " + (currentPlayer == Piece.Color.WHITE ? "Black" : "White") + " wins!");
+            System.out.println("Game over! " + (currentPlayer == Piece.Color.WHITE ? "White" : "Black") + " wins!");
             endGame();
             return;
         }
@@ -448,7 +444,7 @@ public class ChessBoard {
         // Check if the current player has any pieces left
         if (!hasPieces(currentPlayer)) {
             System.out.println("Player " + (currentPlayer == Piece.Color.WHITE ? "White" : "Black") + " has no pieces left!");
-            System.out.println("Game over! " + (currentPlayer == Piece.Color.WHITE ? "Black" : "White") + " wins!");
+            System.out.println("Game over! " + (currentPlayer == Piece.Color.WHITE ? "White" : "Black") + " wins!");
             endGame();
             return;
         }
