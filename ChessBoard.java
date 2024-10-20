@@ -89,7 +89,7 @@ public class ChessBoard {
 
     private List<int[]> getPawnMoves(int row, int col, Piece piece) {
         List<int[]> moves = new ArrayList<>();
-        int direction = piece.getColor() == Piece.Color.WHITE ? -1 : 1; // White pawns move up, black down
+        int direction = piece.getColor() == Piece.Color.WHITE ? 1 : -1; // White pawns move up, black down
 
         // Normal move forward (one square)
         if (isValidMove(row, col, row + direction, col)) {
@@ -97,7 +97,7 @@ public class ChessBoard {
         }
 
         // First move, two squares forward
-        if ((piece.getColor() == Piece.Color.WHITE && row == 6) || (piece.getColor() == Piece.Color.BLACK && row == 1)) {
+        if ((piece.getColor() == Piece.Color.WHITE && row == 1) || (piece.getColor() == Piece.Color.BLACK && row == 6)) {
         // Pawns can move two squares if they are in their starting position
             if (isValidMove(row, col, row + 2 * direction, col)) {
             moves.add(new int[]{row + 2 * direction, col});
@@ -162,7 +162,6 @@ public class ChessBoard {
                 // If the move is valid (not blocked by a piece of the same color)
                 if (isValidMove(row, col, newRow, newCol)) {
                     moves.add(new int[]{newRow, newCol});
-    
                     // Stop if we encounter an opponent's piece (we can capture it)
                     if (board[newRow][newCol] != null) {
                         break;
@@ -221,7 +220,6 @@ public class ChessBoard {
                 // If the move is valid (not blocked by a piece of the same color)
                 if (isValidMove(row, col, newRow, newCol)) {
                     moves.add(new int[]{newRow, newCol});
-    
                     // Stop if we encounter an opponent's piece (we can capture it)
                     if (board[newRow][newCol] != null) {
                         break;
