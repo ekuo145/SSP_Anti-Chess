@@ -290,13 +290,20 @@ public class ChessBoard {
         }
     
         Piece piece = board[startRow][startCol];
+        Piece capturedPiece = board[endRow][endCol];
 
         if (piece != null && piece.canMove(startRow, startCol, endRow, endCol, board)) {
             boolean hasCapture = hasMandatoryCapture(currentPlayer, board);
 
             if (hasCapture && !isCaptureMove(startRow, startCol, endRow, endCol)) {
-                System.out.println("Capture is mandatory, but this move doesn't capture.");
+                // System.out.println("Capture is mandatory, but this move doesn't capture.");
                 return false;
+            }
+
+            if (capturedPiece != null) {
+                if (piece.getColor() == capturedPiece.getColor()) {
+                    return false;
+                }
             }
     
             return true;  // The move is valid

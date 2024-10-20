@@ -116,6 +116,7 @@ public class AntichessUI {
                 selectedSquare = null; // Reset after an invalid attempt
                 System.out.println("Move Not Successful");
             }
+            resetBoardColors();
         }
     }
 
