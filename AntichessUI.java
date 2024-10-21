@@ -99,10 +99,10 @@ public class AntichessUI {
     // Method to handle board button clicks
     private void handleBoardClick(int row, int col) {
         if (selectedSquare == null) {
-            System.out.println("Piece Selected");
+            // System.out.println("Piece Selected");
             selectedSquare = new int[]{row, col};
             List<int[]> validMoves = chessBoard.getValidMoves(row, col);
-            System.out.println(validMoves);
+            // System.out.println(validMoves);
             highlightMoves(validMoves);
         } else {
             // Second click: attempt to move the piece
@@ -203,6 +203,7 @@ public class AntichessUI {
         }
 
         // If a capture is made, add "x" to the move notation
+        //Target Piece is never null, moving piece is always null
         if (targetPiece != null) {
             move.append(columns[startCol]).append(1 + startRow).append("x"); // "x" for capture
         }

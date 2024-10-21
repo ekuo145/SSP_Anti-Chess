@@ -83,7 +83,6 @@ public class ChessBoard {
                 validMoves = getKingMoves(row, col, piece);
                 break;
         }
-
         return validMoves;
     }
 
@@ -461,6 +460,7 @@ public class ChessBoard {
             System.out.println("Game is over. No more moves allowed.");
             return false;
         }
+
 
         // Check if it's the current player's turn and if the move is valid
         if (piece != null && piece.getColor() == currentPlayer && isValidMove(startRow, startCol, endRow, endCol)) {
