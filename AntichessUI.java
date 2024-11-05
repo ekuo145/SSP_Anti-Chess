@@ -98,12 +98,21 @@ public class AntichessUI {
 
     // Method to handle board button clicks
     private void handleBoardClick(int row, int col) {
+        Piece movingPiece = chessBoard.getPieceAt(row, col);
         if (selectedSquare == null) {
             // System.out.println("Piece Selected");
             selectedSquare = new int[]{row, col};
+            Piece targetPiece = chessBoard.getPieceAt(row, col);
             List<int[]> validMoves = chessBoard.getValidMoves(row, col);
             // System.out.println(validMoves);
             highlightMoves(validMoves);
+            if (movingPiece == null) {
+                System.out.println("No piece at this square");
+                selectedSquare = null;
+            }
+            else if (isWhiteTurn ? targetPiece.getColor() == Piece.Color.WHITE : targetPiece.getColor() == Piece.Color.BLACK) {
+                selectedSquare = null;
+            }
         } else {
             // Second click: attempt to move the piece
             boolean moveSuccessful = chessBoard.handleMove(selectedSquare[0], selectedSquare[1], row, col);
@@ -204,7 +213,7 @@ public class AntichessUI {
 
         // If a capture is made, add "x" to the move notation
         //Target Piece is never null, moving piece is always null
-        if (targetPiece != null) {
+        if (movingPiece != null) {
             move.append(columns[startCol]).append(1 + startRow).append("x"); // "x" for capture
         }
         else {
