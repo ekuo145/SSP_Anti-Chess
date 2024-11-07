@@ -107,10 +107,10 @@ public class AntichessUI {
             // System.out.println(validMoves);
             highlightMoves(validMoves);
             if (movingPiece == null) {
-                System.out.println("No piece at this square");
+                // System.out.println("No piece at this square");
                 selectedSquare = null;
             }
-            else if (isWhiteTurn ? targetPiece.getColor() == Piece.Color.WHITE : targetPiece.getColor() == Piece.Color.BLACK) {
+            else if (isWhiteTurn ? targetPiece.getColor() == Piece.Color.BLACK : targetPiece.getColor() == Piece.Color.WHITE) {
                 selectedSquare = null;
             }
         } else {
