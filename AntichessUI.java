@@ -106,21 +106,13 @@ public class AntichessUI {
             List<int[]> validMoves = chessBoard.getValidMoves(row, col);
             // System.out.println(validMoves);
             highlightMoves(validMoves);
-            if (isWhiteTurn ? targetPiece.getColor() == Piece.Color.BLACK : targetPiece.getColor() == Piece.Color.WHITE) {
+            if (movingPiece == null) {
+                // System.out.println("No piece at this square");
                 selectedSquare = null;
             }
-        }
-
-        if (movingPiece == null) {
-            // System.out.println("No piece at this square");
-            selectedSquare = null;
-        }
-
-        else if (isWhiteTurn ? movingPiece.getColor() == Piece.Color.WHITE : movingPiece.getColor() == Piece.Color.BLACK) {
-            selectedSquare = new int[]{row, col};
-            List<int[]> validMoves = chessBoard.getValidMoves(row, col);
-            // System.out.println(validMoves);
-            highlightMoves(validMoves);
+            else if (isWhiteTurn ? targetPiece.getColor() == Piece.Color.BLACK : targetPiece.getColor() == Piece.Color.WHITE) {
+                selectedSquare = null;
+            }
         } else {
             // Second click: attempt to move the piece
             boolean moveSuccessful = chessBoard.handleMove(selectedSquare[0], selectedSquare[1], row, col);
