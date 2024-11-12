@@ -269,6 +269,10 @@ public class ChessBoard {
         // You can reset the game here or exit based on your requirements
     }
 
+    public boolean isGameOver() {
+        return gameOver;
+    }
+
     private boolean isWithinBounds(int row, int col) {
         return row >= 0 && row < board.length && col >= 0 && col < board[0].length;
     }

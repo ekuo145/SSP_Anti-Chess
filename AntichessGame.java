@@ -1,8 +1,16 @@
 public class AntichessGame {
+
     public static void main(String[] args) {
-        // Launch the Antichess UI
-        javax.swing.SwingUtilities.invokeLater(() -> {
-            new AntichessUI(); // Start the UI and the game
-        });
+        GameState game = new GameState();
+        RandomBot bot = new RandomBot();
+
+        while (!ChessBoard.isGameOver()) {
+            if (game.isBotTurn()) {
+                bot.makeRandomMove(game);
+            } else {
+                // Handle human player move or other logic
+            }
+        }
+        System.out.println("Game over!");
     }
 }
