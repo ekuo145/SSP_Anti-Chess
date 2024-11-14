@@ -4,7 +4,6 @@ import java.util.Random;
 public class RandomBot {
 
     private Random random;
-    private Games
 
     public RandomBot() {
         this.random = new Random();
@@ -15,9 +14,9 @@ public class RandomBot {
      * 
      * @param game The current game state, assumed to have getLegalMoves() and makeMove() methods.
      */
-    public void makeRandomMove(GameState game) {
+    public void makeRandomMove(ChessBoard game) {
         // Retrieve all legal moves for the bot's current position
-        List<Move> legalMoves = game.getLegalMoves();
+        List<Move> legalMoves = game.getValidMoves();
 
         // Check if there are any legal moves available
         if (legalMoves.isEmpty()) {
@@ -29,7 +28,7 @@ public class RandomBot {
         Move selectedMove = legalMoves.get(random.nextInt(legalMoves.size()));
 
         // Make the selected move
-        game.makeMove(selectedMove);
+        game.handleMove(selectedMove);
 
         // Output the chosen move for debugging purposes
         System.out.println("Bot chose move: " + selectedMove);
