@@ -19,18 +19,21 @@ public class RandomBot {
         List<Move> legalMoves = game.getLegalMoves();
 
         // Check if there are any legal moves available
-        if (legalMoves.isEmpty()) {
-            System.out.println("No legal moves available. Game over.");
-            return;
+        class Move {
+            private int fromRow;
+            private int fromCol;
+            private int toRow;
+            private int toCol;
+
+            // Constructor and other methods
+
+            public int getFromRow() {
+                return fromRow;
+            }
+
+            // Other getter methods
+
+            // Rest of the code
         }
-
-        // Select a random move from the list
-        Move selectedMove = legalMoves.get(random.nextInt(legalMoves.size()));
-
-        // Make the selected move
-        ChessBoard.handleMove(selectedMove);
-
-        // Output the chosen move for debugging purposes
-        System.out.println("Bot chose move: " + selectedMove);
     }
 }
