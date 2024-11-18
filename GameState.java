@@ -1,14 +1,14 @@
 import java.util.List;
 
 public class GameState {
-    private ChessBoard board;
+    private ChessBoard chessBoard;
     private Player currentPlayer;
 
     /**
      * Initializes the game state with a new ChessBoard and sets the first player.
      */
     public GameState() {
-        this.board = new ChessBoard();
+        this.chessBoard = new ChessBoard();
         this.currentPlayer = Player.WHITE;  // Assuming WHITE always starts
         initializeBoard();
     }
@@ -17,7 +17,7 @@ public class GameState {
      * Initializes the board with pieces in their starting positions.
      */
     private void initializeBoard() {
-        board.setupBoard();  // Assuming this method sets up the initial positions on the board
+        chessBoard.setUpPieces();  // Assuming this method sets up the initial positions on the board
     }
 
     /**
@@ -27,7 +27,15 @@ public class GameState {
      * @return a list of legal moves
      */
     public List<Move> getLegalMoves() {
-        return board.getLegalMoves(currentPlayer);
+        for (int row = 0; row < board.length; row++) {
+            for (int col = 0; col < board[row].length; col++) {
+                Piece piece = board[row][col];
+                if (piece != null && piece.getColor() == playerColor) {
+                    for (int endRow = 0; endRow < board.length; endRow++) {
+                        for (int endCol = 0; endCol < board[endRow].length; endCol++) {
+        return board.getValidMoves(currentPlayer);
+            }
+        }
     }
 
     /**
@@ -36,7 +44,7 @@ public class GameState {
      * @param move The move to make
      */
     public void makeMove(Move move) {
-        board.executeMove(move);
+        chessBoard.handleMove(move);
         switchTurn();
     }
 
@@ -74,6 +82,6 @@ public class GameState {
      * Outputs the current state of the board for debugging or display purposes.
      */
     public void displayBoard() {
-        board.display();
+        chessBoard.display();
     }
 }

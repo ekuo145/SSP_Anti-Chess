@@ -19,7 +19,7 @@ public class ChessBoard {
     }
 
     // Method to set up the pieces
-    private void setUpPieces() {
+    public void setUpPieces() {
         // Set up white pieces
         board[0][0] = new Piece(Piece.PieceType.ROOK, Piece.Color.WHITE);
         board[0][1] = new Piece(Piece.PieceType.KNIGHT, Piece.Color.WHITE);
