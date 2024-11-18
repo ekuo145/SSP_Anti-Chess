@@ -8,18 +8,11 @@ public class GameState {
      * Initializes the game state with a new ChessBoard and sets the first player.
      */
     public GameState() {
-        this.chessBoard = new ChessBoard();
+        this.chessBoard = new ChessBoard(this);
         this.currentPlayer = Player.WHITE;  // Assuming WHITE always starts
-        initializeBoard();
+        chessBoard.startGame();
     }
-
-    /**
-     * Initializes the board with pieces in their starting positions.
-     */
-    private void initializeBoard() {
-        chessBoard.setUpPieces();  // Assuming this method sets up the initial positions on the board
-    }
-
+    
     /**
      * Returns a list of legal moves for the current player.
      * Assumes board has a method to get all legal moves for a player.

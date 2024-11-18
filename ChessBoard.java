@@ -10,12 +10,18 @@ public class ChessBoard {
     private static Piece.Color currentPlayer = Piece.Color.WHITE;
     private boolean gameOver = false;
     private AntichessUI ui; // Reference to the UI
+    private GameState state;
 
     // Constructor initializes the board with pieces
     public ChessBoard(AntichessUI ui) {
         this.ui = ui;
         setUpPieces();
         ui.updateBoard(board);
+    }
+
+    public ChessBoard(GameState state) {
+        this.state = state;
+        setUpPieces();
     }
 
     // Method to set up the pieces
