@@ -45,7 +45,7 @@ public class Player {
         List<Move> possibleMoves = getLegalMoves(currentPlayer.getColor());
         if (!possibleMoves.isEmpty()) {
             Move randomMove = possibleMoves.get(random.nextInt(possibleMoves.size()));
-            board.handleMove(randomMove.getFromRow(), randomMove.getFromCol(), randomMove.getToRow(), randomMove.getToCol());
+            board.handleMove(randomMove);
         }
     }
 

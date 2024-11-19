@@ -119,7 +119,8 @@ public class AntichessUI {
             }
         } else {
             // Second click: attempt to move the piece
-            boolean moveSuccessful = chessBoard.handleMove(selectedSquare[0], selectedSquare[1], row, col);
+            Move move = new Move(selectedSquare[0], selectedSquare[1], row, col, movingPiece); // Declare the move variable
+            boolean moveSuccessful = chessBoard.handleMove(move);
             if (moveSuccessful) {
                 // Update the move history after a successful move
                 addMoveToHistory(selectedSquare[0], selectedSquare[1], row, col);
@@ -258,6 +259,7 @@ public class AntichessUI {
             updateBoard(board.getBoard());
         }
     }
+
 
     public static void main(String[] args) {
         SwingUtilities.invokeLater(AntichessUI::new);

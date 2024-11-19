@@ -1,5 +1,6 @@
 // Define the Piece class and related enums
 public class Piece {
+    private ChessBoard board;
     // Enum for piece type
     public enum PieceType {
         KING, QUEEN, ROOK, BISHOP, KNIGHT, PAWN;
@@ -158,9 +159,22 @@ public class Piece {
             if (board[endRow][endCol] != null && board[endRow][endCol].getColor() != this.color) {
                 System.out.println("Valid Capture");
                 return true;
-            } else {
-                System.out.println("No valid capture.");
+            } 
+            // En passant capture
+        Move lastMove = board.getLastMove();
+        if (board[endRow][endCol] == null && lastMove != null) {
+            int lastMoveStartRow = lastMove.getStartRow();
+            int lastMoveStartCol = lastMove.getStartCol();
+            int lastMoveEndRow = lastMove.getEndRow();
+            int lastMoveEndCol = lastMove.getEndCol();
+            if (board[lastMoveEndRow][lastMoveEndCol] != null && board[lastMoveEndRow][lastMoveEndCol].getType() == PieceType.PAWN) {
+                if (Math.abs(lastMoveStartRow - lastMoveEndRow) == 2 && lastMoveEndRow == startRow && lastMoveEndCol == endCol) {
+                    return true;
+                }
             }
+        } else {
+            System.out.println("No valid capture.");
+        }
         }
         return false;
     }

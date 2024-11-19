@@ -11,6 +11,7 @@ public class ChessBoard {
     private boolean gameOver = false;
     private AntichessUI ui; // Reference to the UI
     private GameState state;
+    private Move lastMove;
 
     // Constructor initializes the board with pieces
     public ChessBoard(AntichessUI ui) {
@@ -463,7 +464,11 @@ public class ChessBoard {
         ui.updateBoard(board);
     }
     
-    public boolean handleMove(int startRow, int startCol, int endRow, int endCol) {
+    public boolean handleMove(Move move) {
+        int startRow = move.getFromRow();
+        int startCol = move.getFromCol();
+        int endRow = move.getToRow();
+        int endCol = move.getToCol();
         Piece piece = board[startRow][startCol];
 
         if (gameOver) {
@@ -479,6 +484,7 @@ public class ChessBoard {
 
             // Record the move
             recordMove(startRow, startCol, endRow, endCol, piece);
+            lastMove = move;
 
             // printBoard();
 
@@ -517,6 +523,7 @@ public class ChessBoard {
             System.out.println();
         }
     }
+
 
 private List<Move> moveHistory = new ArrayList<>();
 
