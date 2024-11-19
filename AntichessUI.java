@@ -11,8 +11,12 @@ public class AntichessUI {
     private DefaultTableModel tableModel; // Model for the move history table   
     private boolean isWhiteTurn = true; // Track whose turn it is
 
+    private Player player;
+    private ChessBoard board;
+
     // Constructor to set up the UI
     public AntichessUI() {
+        player = new Player();
         initializeUI(); // Create and set up the GUI
         chessBoard = new ChessBoard(this); // Pass UI reference to the ChessBoard
         
@@ -243,6 +247,15 @@ public class AntichessUI {
             int col = move[1];
             boardButtons[row][col].setBackground(Color.GREEN); // Use green for valid moves
             // System.out.println("Background Colors set to Green");
+        }
+    }
+
+    public void onMoveMade() {
+        // Update the UI and game state after a move is made
+        player.switchTurn();
+        if (player.isBotTurn()) {
+            player.makeRandomMove(board);
+            updateBoard(board.getBoard()); // Fix: Pass the Piece[][] array from the ChessBoard object
         }
     }
 
