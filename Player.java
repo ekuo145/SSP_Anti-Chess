@@ -1,3 +1,5 @@
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Random;
 
 public class Player {
@@ -16,6 +18,13 @@ public class Player {
         }
     }
 
+    public List<Move> getLegalMoves(Piece.Color color) {
+        List<Move> legalMoves = new ArrayList<>();
+        // Add logic to calculate legal moves for the piece
+        return legalMoves;
+    }
+
+
     public boolean isBotTurn() {
         // Assume the bot is always the BLACK player
         return currentPlayer == PlayerType.BLACK;
@@ -33,8 +42,14 @@ public class Player {
      */
     public void makeRandomMove(ChessBoard board) {
         Random random = new Random();
-        // Implement logic to make a random move on the board
-        // This is a placeholder for the actual move logic
-        // Example: board.movePiece(randomMove);
+        List<Move> possibleMoves = getLegalMoves(currentPlayer.getColor());
+        if (!possibleMoves.isEmpty()) {
+            Move randomMove = possibleMoves.get(random.nextInt(possibleMoves.size()));
+            board.handleMove(randomMove.getFromRow(), randomMove.getFromCol(), randomMove.getToRow(), randomMove.getToCol());
+        }
+    }
+
+    public boolean isGameOver() {
+        return getLegalMoves(currentPlayer.getColor()).isEmpty();
     }
 }

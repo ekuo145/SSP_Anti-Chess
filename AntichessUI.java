@@ -255,7 +255,7 @@ public class AntichessUI {
         player.switchTurn();
         if (player.isBotTurn()) {
             player.makeRandomMove(board);
-            updateBoard(board.getBoard()); // Fix: Pass the Piece[][] array from the ChessBoard object
+            updateBoard(board.getBoard());
         }
     }
 
