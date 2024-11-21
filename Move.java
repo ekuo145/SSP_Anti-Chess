@@ -23,22 +23,18 @@ public class Move {
     }
 
     public int getFromRow() {
-        // TODO Auto-generated method stub
-        throw new UnsupportedOperationException("Unimplemented method 'getFromRow'");
+        return startRow;
     }
 
     public int getFromCol() {
-        // TODO Auto-generated method stub
-        throw new UnsupportedOperationException("Unimplemented method 'getFromCol'");
+        return startCol;
     }
 
     public int getToRow() {
-        // TODO Auto-generated method stub
-        throw new UnsupportedOperationException("Unimplemented method 'getToRow'");
+        return endRow;
     }
 
     public int getToCol() {
-        // TODO Auto-generated method stub
-        throw new UnsupportedOperationException("Unimplemented method 'getToCol'");
+        return endCol;
     }
 }

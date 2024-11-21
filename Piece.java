@@ -1,6 +1,6 @@
 // Define the Piece class and related enums
 public class Piece {
-    private ChessBoard board;
+    private ChessBoard board1;
     // Enum for piece type
     public enum PieceType {
         KING, QUEEN, ROOK, BISHOP, KNIGHT, PAWN;
@@ -161,20 +161,22 @@ public class Piece {
                 return true;
             } 
             // En passant capture
-        Move lastMove = board.getLastMove();
-        if (board[endRow][endCol] == null && lastMove != null) {
-            int lastMoveStartRow = lastMove.getStartRow();
-            int lastMoveStartCol = lastMove.getStartCol();
-            int lastMoveEndRow = lastMove.getEndRow();
-            int lastMoveEndCol = lastMove.getEndCol();
-            if (board[lastMoveEndRow][lastMoveEndCol] != null && board[lastMoveEndRow][lastMoveEndCol].getType() == PieceType.PAWN) {
-                if (Math.abs(lastMoveStartRow - lastMoveEndRow) == 2 && lastMoveEndRow == startRow && lastMoveEndCol == endCol) {
-                    return true;
+        if (board1 != null) {
+            Move lastMove =  board1.getLastMove();
+            if (board[endRow][endCol] == null && lastMove != null) {
+                int lastMoveStartRow = lastMove.getFromRow();
+                int lastMoveStartCol = lastMove.getFromCol();
+                int lastMoveEndRow = lastMove.getToRow();
+                int lastMoveEndCol = lastMove.getToCol();
+                if (board[lastMoveEndRow][lastMoveEndCol] != null && board[lastMoveEndRow][lastMoveEndCol].getType() == PieceType.PAWN) {
+                    if (Math.abs(lastMoveStartRow - lastMoveEndRow) == 2 && lastMoveEndRow == startRow && lastMoveEndCol == endCol) {
+                        return true;
+                    }
                 }
+            } else {
+                System.out.println("No valid capture.");
             }
-        } else {
-            System.out.println("No valid capture.");
-        }
+            }
         }
         return false;
     }
