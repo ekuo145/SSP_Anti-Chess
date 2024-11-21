@@ -13,12 +13,14 @@ public class AntichessUI {
 
     private Player player;
     private ChessBoard board;
+    private GameState state;
 
     // Constructor to set up the UI
     public AntichessUI() {
         player = new Player();
         initializeUI(); // Create and set up the GUI
         chessBoard = new ChessBoard(this); // Pass UI reference to the ChessBoard
+        this.board = new ChessBoard(state);
         
         chessBoard.startGame(); // Start the game
     }
@@ -125,6 +127,7 @@ public class AntichessUI {
                 // Update the move history after a successful move
                 addMoveToHistory(selectedSquare[0], selectedSquare[1], row, col);
                 selectedSquare = null; // Reset after a successful move
+                onMoveMade();
             } else {
                 // Handle invalid move (optional feedback to the user)
                 selectedSquare = null; // Reset after an invalid attempt
@@ -252,11 +255,17 @@ public class AntichessUI {
     }
 
     public void onMoveMade() {
+        if (this.board == null) {
+            System.err.println("Error: ChessBoard is not initialized.");
+            return;
+        }
         // Update the UI and game state after a move is made
+        Piece [][] boardArray = this.chessBoard.getBoard();
+        System.out.println("Move Made");
         player.switchTurn();
         if (player.isBotTurn()) {
-            player.makeRandomMove(board);
-            updateBoard(board.getBoard());
+            player.makeRandomMove(boardArray);
+            updateBoard(boardArray);
         }
     }
 

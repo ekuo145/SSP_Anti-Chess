@@ -9,7 +9,6 @@ public class AntichessGame {
             if (game.isBotTurn()) {
                 bot.makeRandomMove(game);
             } else {
-                // Handle human player move or other logic
             }
         }
         System.out.println("Game over!");

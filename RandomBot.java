@@ -25,15 +25,7 @@ public class RandomBot {
             private int toRow;
             private int toCol;
 
-            // Constructor and other methods
-
-            public int getFromRow() {
-                return fromRow;
-            }
-
-            // Other getter methods
-
-            // Rest of the code
+            
         }
     }
 }
