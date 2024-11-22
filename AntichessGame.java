@@ -1,13 +1,13 @@
 public class AntichessGame {
 
     public static void main(String[] args) {
-        GameState game = new GameState();
-        RandomBot bot = new RandomBot();
-        ChessBoard chessBoard = new ChessBoard(game);
+        AntichessUI ui = new AntichessUI();
+        ChessBoard chessBoard = new ChessBoard(ui);
+        Player player = new Player(chessBoard);
 
         while (!chessBoard.isGameOver()) {
-            if (game.isBotTurn()) {
-                bot.makeRandomMove(game);
+            if (player.isBotTurn()) {
+                player.makeRandomMove(null);
             } else {
             }
         }

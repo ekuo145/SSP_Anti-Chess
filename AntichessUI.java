@@ -4,7 +4,6 @@ import java.awt.*;
 import java.util.List;
 
 public class AntichessUI {
-    private ChessBoard chessBoard;
     private JButton[][] boardButtons; // 8x8 array of buttons representing the board
     private int[] selectedSquare = null; // To store the selected square (piece to move)
     private JTable moveHistoryTable; // Table for move history
@@ -13,16 +12,14 @@ public class AntichessUI {
 
     private Player player;
     private ChessBoard board;
-    private GameState state;
 
     // Constructor to set up the UI
     public AntichessUI() {
-        player = new Player();
+        player = new Player(board);
         initializeUI(); // Create and set up the GUI
-        chessBoard = new ChessBoard(this); // Pass UI reference to the ChessBoard
-        this.board = new ChessBoard(state);
+        this.board = new ChessBoard(this);
         
-        chessBoard.startGame(); // Start the game
+        board.startGame(); // Start the game
     }
 
     // Method to initialize the UI
@@ -104,12 +101,12 @@ public class AntichessUI {
 
     // Method to handle board button clicks
     private void handleBoardClick(int row, int col) {
-        Piece movingPiece = chessBoard.getPieceAt(row, col);
+        Piece movingPiece = board.getPieceAt(row, col);
         if (selectedSquare == null) {
             // System.out.println("Piece Selected");
             selectedSquare = new int[]{row, col};
-            Piece targetPiece = chessBoard.getPieceAt(row, col);
-            List<int[]> validMoves = chessBoard.getValidMoves(row, col);
+            Piece targetPiece = board.getPieceAt(row, col);
+            List<int[]> validMoves = board.getValidMoves(row, col);
             // System.out.println(validMoves);
             highlightMoves(validMoves);
             if (movingPiece == null) {
@@ -122,7 +119,7 @@ public class AntichessUI {
         } else {
             // Second click: attempt to move the piece
             Move move = new Move(selectedSquare[0], selectedSquare[1], row, col, movingPiece); // Declare the move variable
-            boolean moveSuccessful = chessBoard.handleMove(move);
+            boolean moveSuccessful = board.handleMove(move);
             if (moveSuccessful) {
                 // Update the move history after a successful move
                 addMoveToHistory(selectedSquare[0], selectedSquare[1], row, col);
@@ -192,8 +189,8 @@ public class AntichessUI {
 
     private void addMoveToHistory(int startRow, int startCol, int endRow, int endCol) {
         char[] columns = {'a', 'b', 'c', 'd', 'e', 'f', 'g', 'h'};
-        Piece movingPiece = chessBoard.getPieceAt(startRow, startCol);
-        Piece targetPiece = chessBoard.getPieceAt(endRow, endCol); // Piece at the destination square
+        Piece movingPiece = board.getPieceAt(startRow, startCol);
+        Piece targetPiece = board.getPieceAt(endRow, endCol); // Piece at the destination square
         StringBuilder move = new StringBuilder();
         
 
@@ -260,7 +257,7 @@ public class AntichessUI {
             return;
         }
         // Update the UI and game state after a move is made
-        Piece [][] boardArray = this.chessBoard.getBoard();
+        Piece [][] boardArray = this.board.getBoard();
         System.out.println("Move Made");
         player.switchTurn();
         if (player.isBotTurn()) {

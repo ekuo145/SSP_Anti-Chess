@@ -10,7 +10,6 @@ public class ChessBoard {
     private static Piece.Color currentPlayer = Piece.Color.WHITE;
     private boolean gameOver = false;
     private AntichessUI ui; // Reference to the UI
-    private GameState state;
     private Move lastMove;
 
     // Constructor initializes the board with pieces
@@ -18,11 +17,6 @@ public class ChessBoard {
         this.ui = ui;
         setUpPieces();
         ui.updateBoard(board);
-    }
-
-    public ChessBoard(GameState state) {
-        this.state = state;
-        setUpPieces();
     }
 
     // Method to set up the pieces
@@ -469,7 +463,8 @@ public class ChessBoard {
         int startCol = move.getFromCol();
         int endRow = move.getToRow();
         int endCol = move.getToCol();
-        Piece piece = board[startRow][startCol];
+
+        Piece movingPiece = board[startRow][startCol];
 
         if (gameOver) {
             System.out.println("Game is over. No more moves allowed.");
@@ -478,12 +473,12 @@ public class ChessBoard {
 
 
         // Check if it's the current player's turn and if the move is valid
-        if (piece != null && piece.getColor() == currentPlayer && isValidMove(startRow, startCol, endRow, endCol)) {
-            board[endRow][endCol] = piece;  // Move the piece
+        if (movingPiece != null && movingPiece.getColor() == currentPlayer && isValidMove(startRow, startCol, endRow, endCol)) {
+            board[endRow][endCol] = movingPiece;  // Move the piece
             board[startRow][startCol] = null;  // Clear the original square
 
             // Record the move
-            recordMove(startRow, startCol, endRow, endCol, piece);
+            recordMove(startRow, startCol, endRow, endCol, movingPiece);
             lastMove = move;
 
             // printBoard();

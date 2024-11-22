@@ -9,7 +9,7 @@ public class Player {
 
     public Player(ChessBoard chessBoard) {
         this.chessBoard = chessBoard;
-        this.currentPlayer = PlayerType.WHITE; // or initialize as needed
+        this.currentPlayer = PlayerType.WHITE; 
     }
 
     public enum PlayerType {
