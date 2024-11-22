@@ -260,10 +260,18 @@ public class AntichessUI {
         Piece [][] boardArray = this.board.getBoard();
         System.out.println("Move Made");
         player.switchTurn();
-        if (player.isBotTurn()) {
-            player.makeRandomMove(boardArray);
-            updateBoard(boardArray);
-        }
+        if (turnColor == Piece.Color.WHITE) {
+            if (whitePlayer.isBot()) {
+                whitePlayer.makeRandomMove();
+            } else {
+                // Wait for human input
+            }
+        } else {
+            if (blackPlayer.isBot()) {
+                blackPlayer.makeRandomMove();
+            } else {
+                // Wait for human input
+            }
     }
 
 

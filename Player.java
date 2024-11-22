@@ -3,37 +3,48 @@ import java.util.List;
 import java.util.Random;
 
 public class Player {
-    private PlayerType currentPlayer = PlayerType.WHITE;
+    private Piece.Color color;
     private ChessBoard chessBoard;
+    private boolean isBot; // Add this to the Player class
+    private GameManager gameManager;
 
-    public Player(ChessBoard chessBoard) {
+    public Piece.Color turnColor = Piece.Color.WHITE;
+
+    public Player(Piece.Color color, boolean isBot, ChessBoard chessBoard) {
+        this.color = color;
+        this.isBot = isBot;
+        this.chessBoard = chessBoard; // Initialize chessBoard
+    }
+
+    public Piece.Color getTurnColor() {
+        return turnColor;
+    }
+
+    public Piece.Color getColor() {
+        return color;
+    }
+
+    // Setter for chessBoard
+    public void setChessBoard(ChessBoard chessBoard) {
         this.chessBoard = chessBoard;
-        this.currentPlayer = PlayerType.WHITE; 
     }
 
-    public enum PlayerType {
-        WHITE,
-        BLACK;
-
-        public Piece.Color getColor() {
-            if (this == WHITE) {
-                return Piece.Color.WHITE;
-            } else {
-                return Piece.Color.BLACK;
-            }
+    public List<Move> getLegalMoves() {
+        if (chessBoard == null) {
+            throw new IllegalStateException("ChessBoard is not initialized for the player.");
         }
-    }
 
-    public List<Move> getLegalMoves(Piece.Color playerColor) {
         List<Move> legalMoves = new ArrayList<>();
+        Piece[][] board = chessBoard.getBoard();
         
         // Iterate through the board to find all pieces of the current player
         for (int row = 0; row < 8; row++) {
             for (int col = 0; col < 8; col++) {
+
                 Piece piece = chessBoard.getPieceAt(row, col); // Assuming `chessBoard` has this method
-                if (piece != null && piece.getColor() == playerColor) {
+                if (piece != null && piece.getColor() == this.color) {
                     // Get all potential moves for this piece and validate them
-                    List<Move> candidateMoves = piece.generatePossibleMoves(row, col);
+                    List<Move> candidateMoves = piece.generatePotentialMoves(row, col, chessBoard.getBoard());
                     for (Move move : candidateMoves) {
                         int startRow = move.getFromRow();
                         int startCol = move.getFromCol();
@@ -51,16 +62,15 @@ public class Player {
     
 
 
-    public boolean isBotTurn() {
-        // Assume the bot is always the BLACK player
-        return currentPlayer == PlayerType.BLACK;
+    public boolean isBot() {
+        return isBot;
     }
 
     /**
      * Switches the turn to the other player.
      */
     public void switchTurn() {
-        currentPlayer = (currentPlayer == PlayerType.WHITE) ? PlayerType.BLACK : PlayerType.WHITE;
+        turnColor = (turnColor == Piece.Color.WHITE) ? Piece.Color.BLACK : Piece.Color.WHITE;;
     }
 
     /**
@@ -70,18 +80,14 @@ public class Player {
         Random rand = new Random();
     
         // Get all legal moves for the current player
-        List<Move> possibleMoves = getLegalMoves(currentPlayer.getColor());
+        List<Move> possibleMoves = getLegalMoves();
     
         // If there are valid moves, randomly select one and execute it
         if (!possibleMoves.isEmpty()) {
             Move randomMove = possibleMoves.get(rand.nextInt(possibleMoves.size()));
-            chessBoard.handleMove(randomMove); // Execute the selected move
+            chessBoard.handleMove(randomMove, gameManager); // Execute the selected move
         } else {
             System.out.println("No legal moves available for the bot.");
         }
     }    
-
-    public boolean isGameOver() {
-        return getLegalMoves(currentPlayer.getColor()).isEmpty();
-    }
 }

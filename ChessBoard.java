@@ -458,7 +458,20 @@ public class ChessBoard {
         ui.updateBoard(board);
     }
     
-    public boolean handleMove(Move move) {
+    public boolean handleMove(Move move, GameManager gameManager) {
+    Player currentPlayer = gameManager.getCurrentPlayer();
+    if (move.getPiece().getColor() != currentPlayer.getColor()) {
+        System.out.println("Not your turn!");
+        return false;
+    }
+
+    // Proceed with move handling logic
+    executeMove(move);
+    gameManager.switchTurn();
+    return true;
+    }
+
+    private void executeMove(Move move) {
         int startRow = move.getFromRow();
         int startCol = move.getFromCol();
         int endRow = move.getToRow();
@@ -466,43 +479,18 @@ public class ChessBoard {
 
         Piece movingPiece = board[startRow][startCol];
 
-        if (gameOver) {
-            System.out.println("Game is over. No more moves allowed.");
-            return false;
-        }
-
-
-        // Check if it's the current player's turn and if the move is valid
-        if (movingPiece != null && movingPiece.getColor() == currentPlayer && isValidMove(startRow, startCol, endRow, endCol)) {
-            board[endRow][endCol] = movingPiece;  // Move the piece
-            board[startRow][startCol] = null;  // Clear the original square
-
-            // Record the move
+        // Check if the move is valid
+        if (movingPiece != null && movingPiece.getColor() == turnColor && isValidMove(startRow, startCol, endRow, endCol)) {
+            // Move the piece to the target location
+            board[endRow][endCol] = movingPiece;
+            board[startRow][startCol] = null;
             recordMove(startRow, startCol, endRow, endCol, movingPiece);
-            lastMove = move;
-
-            // printBoard();
-
             checkPawnPromotion(endRow, endCol);
-
-            // Alternate between players
-            switchPlayer();
-    
-            // Check if the next player has valid moves or if the game should end
+            ui.updateBoard(board);
             checkGameEnd();
-
-            // Update the UI after the move
-            SwingUtilities.invokeLater(() -> ui.updateBoard(board));
-
-            boolean hasCapture = hasMandatoryCapture(currentPlayer, board);
-                if (hasCapture) {
-            System.out.println("Next player has a mandatory capture.");
+        } else {
+            System.out.println("Invalid move. Try again.");
         }
-
-        return true;
-        }
-        System.out.println("Invalid move.");
-        return false;
     }
 
     // Print the board
