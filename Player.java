@@ -4,7 +4,6 @@ import java.util.Random;
 
 public class Player {
     private PlayerType currentPlayer = PlayerType.WHITE;
-    private Piece.Color color = currentPlayer.getColor();
     private ChessBoard chessBoard;
 
     public Player(ChessBoard chessBoard) {
@@ -25,25 +24,23 @@ public class Player {
         }
     }
 
-    public List<Move> getLegalMoves(Piece.Color color) {
+    public List<Move> getLegalMoves(Piece.Color playerColor) {
         List<Move> legalMoves = new ArrayList<>();
-        if (chessBoard == null) {
-            System.err.println("Error: ChessBoard is not initialized.");
-            return legalMoves;
-        }
-
-        Piece[][] board = chessBoard.getBoard();
-
-        for (int startRow = 0; startRow < 8; startRow++) {
-            for (int startCol = 0; startCol < 8; startCol++) {
-                Piece piece = board[startRow][startCol];
-                if (piece != null && piece.getColor() == color) {
-                    for (int endRow = 0; endRow < 8; endRow++) {
-                        for (int endCol = 0; endCol < 8; endCol++) {
-                            Move move = new Move(startRow, startCol, endRow, endCol, piece);
-                            if (piece.canMove(startRow, startCol, endRow, endCol, board)) {
-                                legalMoves.add(move);
-                            }
+        
+        // Iterate through the board to find all pieces of the current player
+        for (int row = 0; row < 8; row++) {
+            for (int col = 0; col < 8; col++) {
+                Piece piece = chessBoard.getPieceAt(row, col); // Assuming `chessBoard` has this method
+                if (piece != null && piece.getColor() == playerColor) {
+                    // Get all potential moves for this piece and validate them
+                    List<Move> candidateMoves = piece.generatePossibleMoves(row, col);
+                    for (Move move : candidateMoves) {
+                        int startRow = move.getFromRow();
+                        int startCol = move.getFromCol();
+                        int endRow = move.getToRow();
+                        int endCol = move.getToCol();
+                        if (chessBoard.isValidMove(startRow, startCol, endRow, endCol)) { // Efficient validation for each move
+                            legalMoves.add(move);
                         }
                     }
                 }
@@ -51,6 +48,7 @@ public class Player {
         }
         return legalMoves;
     }
+    
 
 
     public boolean isBotTurn() {
@@ -70,32 +68,18 @@ public class Player {
      */
     public void makeRandomMove(Piece[][] board) {
         Random rand = new Random();
-        int startRow, startCol, endRow, endCol;
-        boolean moveMade = false;
-
+    
+        // Get all legal moves for the current player
         List<Move> possibleMoves = getLegalMoves(currentPlayer.getColor());
-        System.out.println(possibleMoves);
+    
+        // If there are valid moves, randomly select one and execute it
         if (!possibleMoves.isEmpty()) {
             Move randomMove = possibleMoves.get(rand.nextInt(possibleMoves.size()));
-            if (randomMove != null) {
-            chessBoard.handleMove(randomMove);
+            chessBoard.handleMove(randomMove); // Execute the selected move
+        } else {
+            System.out.println("No legal moves available for the bot.");
         }
-        }
-
-        while (!moveMade) {
-            startRow = rand.nextInt(8);
-            startCol = rand.nextInt(8);
-            endRow = rand.nextInt(8);
-            endCol = rand.nextInt(8);
-            Piece piece = board[startRow][startCol];
-            if (piece != null && piece.getColor() == this.color) {
-                Move move = new Move(startRow, startCol, endRow, endCol, piece);
-                if (this.chessBoard != null && this.chessBoard.handleMove(move)) {
-                    moveMade = true;
-                }
-            }
-        }
-    }
+    }    
 
     public boolean isGameOver() {
         return getLegalMoves(currentPlayer.getColor()).isEmpty();

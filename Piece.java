@@ -1,4 +1,8 @@
 // Define the Piece class and related enums
+
+import java.util.ArrayList;
+import java.util.List;
+
 public class Piece {
     private ChessBoard board1;
     // Enum for piece type
@@ -181,5 +185,147 @@ public class Piece {
         return false;
     }
 
+public List<Move> generatePotentialMoves(int row, int col, Piece[][] board) {
+    List<Move> potentialMoves = new ArrayList<>();
+    
+    switch (this.type) {
+        case KING:
+            generateKingMoves(row, col, board, potentialMoves);
+            break;
+        case QUEEN:
+            generateQueenMoves(row, col, board, potentialMoves);
+            break;
+        case ROOK:
+            generateRookMoves(row, col, board, potentialMoves);
+            break;
+        case BISHOP:
+            generateBishopMoves(row, col, board, potentialMoves);
+            break;
+        case KNIGHT:
+            generateKnightMoves(row, col, board, potentialMoves);
+            break;
+        case PAWN:
+            generatePawnMoves(row, col, board, potentialMoves);
+            break;
+    }
+    
+    return potentialMoves;
+}
+private void generateKingMoves(int row, int col, Piece[][] board, List<Move> potentialMoves) {
+    int[] rowOffsets = {-1, -1, -1, 0, 0, 1, 1, 1};
+    int[] colOffsets = {-1, 0, 1, -1, 1, -1, 0, 1};
+    
+    for (int i = 0; i < rowOffsets.length; i++) {
+        int newRow = row + rowOffsets[i];
+        int newCol = col + colOffsets[i];
+        if (isWithinBounds(newRow, newCol)) {
+            if (board[newRow][newCol] == null || board[newRow][newCol].getColor() != this.color) {
+                potentialMoves.add(new Move(row, col, newRow, newCol, this));
+            }
+        }
+    }
+}
+
+private void generateQueenMoves(int row, int col, Piece[][] board, List<Move> potentialMoves) {
+    generateRookMoves(row, col, board, potentialMoves);
+    generateBishopMoves(row, col, board, potentialMoves);
+}
+
+private void generateRookMoves(int row, int col, Piece[][] board, List<Move> potentialMoves) {
+    int[] rowOffsets = {0, 0, 1, -1};
+    int[] colOffsets = {1, -1, 0, 0};
+    
+    for (int i = 0; i < rowOffsets.length; i++) {
+        int newRow = row;
+        int newCol = col;
+        
+        while (true) {
+            newRow += rowOffsets[i];
+            newCol += colOffsets[i];
+            if (!isWithinBounds(newRow, newCol)) break;
+            
+            if (board[newRow][newCol] == null) {
+                potentialMoves.add(new Move(row, col, newRow, newCol, this));
+            } else {
+                if (board[newRow][newCol].getColor() != this.color) {
+                    potentialMoves.add(new Move(row, col, newRow, newCol, this));
+                }
+                break;
+            }
+        }
+    }
+}
+
+private void generateBishopMoves(int row, int col, Piece[][] board, List<Move> potentialMoves) {
+    int[] rowOffsets = {1, 1, -1, -1};
+    int[] colOffsets = {1, -1, 1, -1};
+    
+    for (int i = 0; i < rowOffsets.length; i++) {
+        int newRow = row;
+        int newCol = col;
+        
+        while (true) {
+            newRow += rowOffsets[i];
+            newCol += colOffsets[i];
+            if (!isWithinBounds(newRow, newCol)) break;
+            
+            if (board[newRow][newCol] == null) {
+                potentialMoves.add(new Move(row, col, newRow, newCol, this));
+            } else {
+                if (board[newRow][newCol].getColor() != this.color) {
+                    potentialMoves.add(new Move(row, col, newRow, newCol, this));
+                }
+                break;
+            }
+        }
+    }
+}
+
+private void generateKnightMoves(int row, int col, Piece[][] board, List<Move> potentialMoves) {
+    int[] rowOffsets = {-2, -2, -1, -1, 1, 1, 2, 2};
+    int[] colOffsets = {-1, 1, -2, 2, -2, 2, -1, 1};
+    
+    for (int i = 0; i < rowOffsets.length; i++) {
+        int newRow = row + rowOffsets[i];
+        int newCol = col + colOffsets[i];
+        if (isWithinBounds(newRow, newCol)) {
+            if (board[newRow][newCol] == null || board[newRow][newCol].getColor() != this.color) {
+                potentialMoves.add(new Move(row, col, newRow, newCol, this));
+            }
+        }
+    }
+}
+
+private void generatePawnMoves(int row, int col, Piece[][] board, List<Move> potentialMoves) {
+    int direction = (color == Color.WHITE) ? 1 : -1;
+    
+    // Move forward
+    int forwardRow = row + direction;
+    if (isWithinBounds(forwardRow, col) && board[forwardRow][col] == null) {
+        potentialMoves.add(new Move(row, col, forwardRow, col, this));
+        // Two squares forward (only from the starting position)
+        if ((row == 1 && color == Color.WHITE) || (row == 6 && color == Color.BLACK)) {
+            int twoForwardRow = row + 2 * direction;
+            if (board[twoForwardRow][col] == null) {
+                potentialMoves.add(new Move(row, col, twoForwardRow, col, this));
+            }
+        }
+    }
+    
+    // Capture diagonally
+    for (int offset : new int[]{-1, 1}) {
+        int captureCol = col + offset;
+        if (isWithinBounds(forwardRow, captureCol) && board[forwardRow][captureCol] != null 
+            && board[forwardRow][captureCol].getColor() != this.color) {
+            potentialMoves.add(new Move(row, col, forwardRow, captureCol, this));
+        }
+    }
+    
+    // En passant can be handled separately if necessary
+}
+
+private boolean isWithinBounds(int row, int col) {
+    return row >= 0 && row < 8 && col >= 0 && col < 8;
+}
 
 }

@@ -253,7 +253,7 @@ public class AntichessUI {
 
     public void onMoveMade() {
         if (this.board == null) {
-            System.err.println("Error: ChessBoard is not initialized.");
+            System.err.println("Error: ChessBoard is not initialized. AntiChessLocation");
             return;
         }
         // Update the UI and game state after a move is made
