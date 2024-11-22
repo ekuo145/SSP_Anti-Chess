@@ -161,7 +161,7 @@ public class Piece {
         // Capturing diagonally
         else if (Math.abs(startCol - endCol) == 1 && startRow + direction == endRow) {
             if (board[endRow][endCol] != null && board[endRow][endCol].getColor() != this.color) {
-                System.out.println("Valid Capture");
+                // System.out.println("Valid Capture");
                 return true;
             } 
             // En passant capture
@@ -178,7 +178,7 @@ public class Piece {
                     }
                 }
             } else {
-                System.out.println("No valid capture.");
+                // System.out.println("No valid capture.");
             }
             }
         }

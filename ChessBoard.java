@@ -1,5 +1,7 @@
 import java.util.Scanner;
+
 import javax.swing.SwingUtilities;
+
 import java.util.List;
 import java.util.ArrayList;
 
@@ -10,7 +12,8 @@ public class ChessBoard {
     private static Piece.Color currentPlayer = Piece.Color.WHITE;
     private boolean gameOver = false;
     private AntichessUI ui; // Reference to the UI
-    private Move lastMove;
+
+    Move lastMove;
 
     // Constructor initializes the board with pieces
     public ChessBoard(AntichessUI ui) {
@@ -459,38 +462,49 @@ public class ChessBoard {
     }
     
     public boolean handleMove(Move move, GameManager gameManager) {
-    Player currentPlayer = gameManager.getCurrentPlayer();
-    if (move.getMovedPiece().getColor() != currentPlayer.getColor()) {
-        System.out.println("Not your turn!");
-        return false;
-    }
-
-    // Proceed with move handling logic
-    executeMove(move);
-    gameManager.switchTurn();
-    return true;
-    }
-
-    private void executeMove(Move move) {
         int startRow = move.getFromRow();
         int startCol = move.getFromCol();
         int endRow = move.getToRow();
         int endCol = move.getToCol();
+        Piece piece = board[startRow][startCol];
 
-        Piece movingPiece = board[startRow][startCol];
-
-        // Check if the move is valid
-        if (movingPiece != null && movingPiece.getColor() == currentPlayer && isValidMove(startRow, startCol, endRow, endCol)) {
-            // Move the piece to the target location
-            board[endRow][endCol] = movingPiece;
-            board[startRow][startCol] = null;
-            recordMove(startRow, startCol, endRow, endCol, movingPiece);
-            checkPawnPromotion(endRow, endCol);
-            ui.updateBoard(board);
-            checkGameEnd();
-        } else {
-            System.out.println("Invalid move. Try again.");
+        if (gameOver) {
+            System.out.println("Game is over. No more moves allowed.");
+            return false;
         }
+
+
+        // Check if it's the current player's turn and if the move is valid
+        if (piece != null && piece.getColor() == currentPlayer && isValidMove(startRow, startCol, endRow, endCol)) {
+            board[endRow][endCol] = piece;  // Move the piece
+            board[startRow][startCol] = null;  // Clear the original square
+
+            // Record the move
+            recordMove(startRow, startCol, endRow, endCol, piece);
+            lastMove = move;
+
+            // printBoard();
+
+            checkPawnPromotion(endRow, endCol);
+
+            // Alternate between players
+            gameManager.switchTurn();
+    
+            // Check if the next player has valid moves or if the game should end
+            checkGameEnd();
+
+            // Update the UI after the move
+            SwingUtilities.invokeLater(() -> ui.updateBoard(board));
+
+            boolean hasCapture = hasMandatoryCapture(currentPlayer, board);
+                if (hasCapture) {
+            System.out.println("Next player has a mandatory capture.");
+        }
+
+        return true;
+        }
+        System.out.println("Invalid move.");
+        return false;
     }
 
     // Print the board

@@ -39,7 +39,6 @@ public class Player {
         }
 
         List<Move> legalMoves = new ArrayList<>();
-        Piece[][] board = chessBoard.getBoard();
         
         // Iterate through the board to find all pieces of the current player
         for (int row = 0; row < 8; row++) {
@@ -89,6 +88,7 @@ public class Player {
         // If there are valid moves, randomly select one and execute it
         if (!possibleMoves.isEmpty()) {
             Move randomMove = possibleMoves.get(rand.nextInt(possibleMoves.size()));
+            System.out.println("Bot selected move: " + randomMove.getFromRow() + ", " + randomMove.getFromCol() + " to " + randomMove.getToRow() + ", " + randomMove.getToCol());
             chessBoard.handleMove(randomMove, gameManager); // Execute the selected move
         } else {
             System.out.println("No legal moves available for the bot.");

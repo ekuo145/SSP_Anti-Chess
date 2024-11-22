@@ -15,7 +15,6 @@ public class AntichessUI {
     Player player;
     
     private ChessBoard board;
-    private Piece movingPiece;
     private GameManager gameManager;
 
     // Constructor to set up the UI
@@ -23,6 +22,7 @@ public class AntichessUI {
         initializeUI(); // Create and set up the GUI
         
         this.board = new ChessBoard(this);
+        this.player = new Player(Piece.Color.WHITE, false, board);
         this.whitePlayer = new Player(Piece.Color.WHITE, false, board);  // Human player (White)
         this.blackPlayer = new Player(Piece.Color.BLACK, true, board);   // Bot player (Black)
         this.gameManager = new GameManager(whitePlayer, blackPlayer); // Initialize GameManager
@@ -113,8 +113,8 @@ public class AntichessUI {
 
     // Method to handle board button clicks
     private void handleBoardClick(int row, int col) {
-        Piece movingPiece = board.getPieceAt(row, col);
         if (selectedSquare == null) {
+            Piece movingPiece = board.getPieceAt(row, col);
             // System.out.println("Piece Selected");
             selectedSquare = new int[]{row, col};
             Piece targetPiece = board.getPieceAt(row, col);
@@ -129,9 +129,14 @@ public class AntichessUI {
                 selectedSquare = null;
             }
         } else {
+            if (selectedSquare == null || selectedSquare.length < 2) {
+                System.err.println("Error: selectedSquare is not properly initialized.");
+            }
             // Second click: attempt to move the piece
+            Piece movingPiece = board.getPieceAt(selectedSquare[0], selectedSquare[1]);
             Move move = new Move(selectedSquare[0], selectedSquare[1], row, col, movingPiece); // Declare the move variable
             boolean moveSuccessful = board.handleMove(move, gameManager);
+            System.out.println("Move Attempted");
             if (moveSuccessful) {
                 // Update the move history after a successful move
                 addMoveToHistory(selectedSquare[0], selectedSquare[1], row, col);
@@ -269,22 +274,17 @@ public class AntichessUI {
             return;
         }
 
-        if (movingPiece == null) {
-            System.err.println("Error: No piece selected for the move.");
-            return; // Exit if there's no moving piece
-        }
-
         // Update the UI and game state after a move is made
         Piece [][] boardArray = this.board.getBoard();
         System.out.println("Move Made");
         player.switchTurn();
-        if (isWhiteTurn && movingPiece.getColor() == Piece.Color.WHITE) {
+        if (isWhiteTurn) {
             if (whitePlayer.isBot()) {
                 whitePlayer.makeRandomMove(boardArray);
             } else {
                 // Wait for human input
             }
-        } else if (!isWhiteTurn && movingPiece.getColor() == Piece.Color.BLACK) {
+        } else if (!isWhiteTurn) {
             if (blackPlayer.isBot()) {
                 blackPlayer.makeRandomMove(boardArray);
             } else {
