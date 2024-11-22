@@ -29,6 +29,10 @@ public class Player {
         this.chessBoard = chessBoard;
     }
 
+    public void setGameManager(GameManager gameManager) {
+        this.gameManager = gameManager;
+    }
+
     public List<Move> getLegalMoves() {
         if (chessBoard == null) {
             throw new IllegalStateException("ChessBoard is not initialized for the player.");
