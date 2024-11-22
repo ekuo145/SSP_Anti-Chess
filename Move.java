@@ -37,4 +37,8 @@ public class Move {
     public int getToCol() {
         return endCol;
     }
+
+    public Piece getMovedPiece() {
+        return movedPiece;
+    }
 }

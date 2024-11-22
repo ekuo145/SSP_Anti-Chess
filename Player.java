@@ -8,7 +8,7 @@ public class Player {
     private boolean isBot; // Add this to the Player class
     private GameManager gameManager;
 
-    public Piece.Color turnColor = Piece.Color.WHITE;
+    private Piece.Color turnColor = Piece.Color.WHITE;
 
     public Player(Piece.Color color, boolean isBot, ChessBoard chessBoard) {
         this.color = color;

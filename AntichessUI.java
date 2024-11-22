@@ -15,9 +15,9 @@ public class AntichessUI {
 
     // Constructor to set up the UI
     public AntichessUI() {
-        player = new Player(board);
         initializeUI(); // Create and set up the GUI
         this.board = new ChessBoard(this);
+        player = new Player(Piece.Color.WHITE, false, board);
         
         board.startGame(); // Start the game
     }
@@ -278,4 +278,5 @@ public class AntichessUI {
     public static void main(String[] args) {
         SwingUtilities.invokeLater(AntichessUI::new);
     }
+}
 }

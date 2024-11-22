@@ -460,7 +460,7 @@ public class ChessBoard {
     
     public boolean handleMove(Move move, GameManager gameManager) {
     Player currentPlayer = gameManager.getCurrentPlayer();
-    if (move.getPiece().getColor() != currentPlayer.getColor()) {
+    if (move.getMovedPiece().getColor() != currentPlayer.getColor()) {
         System.out.println("Not your turn!");
         return false;
     }
@@ -480,7 +480,7 @@ public class ChessBoard {
         Piece movingPiece = board[startRow][startCol];
 
         // Check if the move is valid
-        if (movingPiece != null && movingPiece.getColor() == turnColor && isValidMove(startRow, startCol, endRow, endCol)) {
+        if (movingPiece != null && movingPiece.getColor() == currentPlayer && isValidMove(startRow, startCol, endRow, endCol)) {
             // Move the piece to the target location
             board[endRow][endCol] = movingPiece;
             board[startRow][startCol] = null;
