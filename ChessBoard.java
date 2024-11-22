@@ -489,6 +489,8 @@ public class ChessBoard {
 
             // Alternate between players
             gameManager.switchTurn();
+            currentPlayer = gameManager.getCurrentPlayer().getColor();
+            System.out.println("Switching turn to " + gameManager.getCurrentPlayer().getColor().toString());
     
             // Check if the next player has valid moves or if the game should end
             checkGameEnd();
@@ -503,6 +505,7 @@ public class ChessBoard {
 
         return true;
         }
+
         System.out.println("Invalid move.");
         return false;
     }

@@ -281,16 +281,19 @@ public class AntichessUI {
         if (isWhiteTurn) {
             if (whitePlayer.isBot()) {
                 whitePlayer.makeRandomMove(boardArray);
+                isWhiteTurn = !isWhiteTurn;
             } else {
                 // Wait for human input
             }
         } else if (!isWhiteTurn) {
             if (blackPlayer.isBot()) {
                 blackPlayer.makeRandomMove(boardArray);
+                isWhiteTurn = !isWhiteTurn;
+                // System.out.println(isWhiteTurn);
             } else {
                 // Wait for human input
             }
-    }
+        }
 
 
 
