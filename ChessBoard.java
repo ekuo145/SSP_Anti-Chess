@@ -608,4 +608,8 @@ private List<Move> moveHistory = new ArrayList<>();
         printBoard();
     }
 
+    public Piece[][] getBoardArray() {
+        return board;
+    }
+
 }

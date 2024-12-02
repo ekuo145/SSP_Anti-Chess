@@ -5,7 +5,7 @@ import java.util.Random;
 public class Player {
     private Piece.Color color;
     private ChessBoard chessBoard;
-    private boolean isBot; // Add this to the Player class
+    private boolean isBot; 
     private GameManager gameManager;
 
     private Piece.Color turnColor = Piece.Color.WHITE;

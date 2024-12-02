@@ -77,6 +77,10 @@ public class AntichessUI {
 
         
         board.startGame(); // Start the game
+        if (whitePlayer.isBot()) {
+            whitePlayer.makeRandomMove(board.getBoard());
+            isWhiteTurn = !isWhiteTurn;
+        }
     }
 
     // Method to initialize the UI
@@ -321,7 +325,7 @@ public class AntichessUI {
 
         // Update the UI and game state after a move is made
         Piece [][] boardArray = this.board.getBoard();
-        System.out.println("Move Made");
+        // System.out.println("Move Made");
         player.switchTurn();
         if (isWhiteTurn) {
             if (whitePlayer.isBot()) {
