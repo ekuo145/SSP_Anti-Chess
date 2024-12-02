@@ -409,7 +409,21 @@ public class ChessBoard {
         board[row][col] = newPiece;
     }
 
-    public void makeRandomPromotionMove(int row, int col, Piece.Color color) {
+    public void checkRandomPromotionMove(int endRow, int endCol, Piece.Color color) {
+        Piece piece = board[endRow][endCol];
+        if (piece instanceof Piece) {
+            if (piece.getType() == Piece.PieceType.PAWN) {
+            // System.out.println("Piece is a Pawn");
+            // Check if the pawn has reached the last row (opposite side)
+            if ((piece.getColor() == Piece.Color.WHITE && endRow == 7) || 
+                (piece.getColor() == Piece.Color.BLACK && endRow == 0)) {
+                    makeRandomPromotionMove(endRow, endCol, piece.getColor());
+                }
+            }
+        }
+    }
+
+    private void makeRandomPromotionMove(int row, int col, Piece.Color color) {
         Piece newPiece;
         Piece[] promotionOptions = {new Piece(Piece.PieceType.QUEEN, (color)), new Piece(Piece.PieceType.ROOK,(color)), new Piece(Piece.PieceType.BISHOP,(color)), new Piece(Piece.PieceType.KNIGHT,(color)), new Piece(Piece.PieceType.KING,(color))};
         Random random = new Random();
@@ -502,7 +516,7 @@ public class ChessBoard {
 
             // printBoard();
             if (gameManager.getCurrentPlayer().isBot()) {
-                makeRandomPromotionMove(endRow, endCol, currentPlayer);;
+                checkRandomPromotionMove(endRow, endCol, currentPlayer);;
             } else {
             checkPawnPromotion(endRow, endCol);
             }
