@@ -9,6 +9,9 @@ public class AntichessUI {
     private JTable moveHistoryTable; // Table for move history
     private DefaultTableModel tableModel; // Model for the move history table   
     private boolean isWhiteTurn = true; // Track whose turn it is
+    private boolean isBoardFlipped = false;
+    private JPanel boardPanel;
+    private JButton flipButton;
 
     Player whitePlayer;
     Player blackPlayer;
@@ -91,6 +94,7 @@ public class AntichessUI {
         frame.setSize(1000, 800); // Adjust to fit the board and labels snugly
         frame.setLayout(new BorderLayout());
 
+        
         JPanel mainPanel = new JPanel(new BorderLayout()); // Use BorderLayout for main panel
         JPanel boardPanel = new JPanel(new GridLayout(9,9));
         // Create board buttons and set up action listeners
@@ -107,6 +111,16 @@ public class AntichessUI {
         }
 
         loadImages();
+
+         // Add the flip button
+         JButton flipButton = new JButton("Flip Board");
+         flipButton.addActionListener(new ActionListener() {
+             @Override
+             public void actionPerformed(ActionEvent e) {
+                 isBoardFlipped = !isBoardFlipped;
+                 updateBoardDisplay();
+             }
+         });
         
         
         // Add row labels and board buttons
@@ -156,6 +170,7 @@ public class AntichessUI {
 
         mainPanel.add(boardPanel, BorderLayout.CENTER);
         mainPanel.add(scrollPane, BorderLayout.EAST);
+        mainPanel.add(flipButton, BorderLayout.SOUTH);
 
         frame.add(mainPanel);
         frame.setVisible(true);
