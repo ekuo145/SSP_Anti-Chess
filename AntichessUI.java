@@ -55,10 +55,12 @@ public class AntichessUI {
                 // Play as White against Black Bot
                 this.whitePlayer = new Player(Piece.Color.WHITE, false, board);  // Human player (White)
                 this.blackPlayer = new Player(Piece.Color.BLACK, true, board);   // Bot player (Black)
+                blackPlayer.setUI(AntichessUI.this);
             } else {
                 // Play as Black against White Bot
                 this.whitePlayer = new Player(Piece.Color.WHITE, true, board);   // Bot player (White)
                 this.blackPlayer = new Player(Piece.Color.BLACK, false, board);  // Human player (Black)
+                whitePlayer.setUI(AntichessUI.this);
             }
         } else {
             // Play against Human
@@ -79,7 +81,6 @@ public class AntichessUI {
         board.startGame(); // Start the game
         if (whitePlayer.isBot()) {
             whitePlayer.makeRandomMove(board.getBoard());
-            isWhiteTurn = !isWhiteTurn;
         }
     }
 
@@ -187,7 +188,6 @@ public class AntichessUI {
             boolean moveSuccessful = board.handleMove(move, gameManager);
             System.out.println("Move Attempted");
             if (moveSuccessful) {
-                // Update the move history after a successful move
                 addMoveToHistory(selectedSquare[0], selectedSquare[1], row, col);
                 selectedSquare = null; // Reset after a successful move
                 onMoveMade();
@@ -206,7 +206,7 @@ public class AntichessUI {
             for (int col = 0; col < 8; col++) {
                 Piece piece = board[row][col];;
                  if (piece != null) {
-                        int index = piece.getType().ordinal() + (piece.getColor() == Piece.Color.WHITE ? 0 : 6); //don't really understand this part, could be what is causing display issues
+                        int index = piece.getType().ordinal() + (piece.getColor() == Piece.Color.WHITE ? 0 : 6); 
                         boardButtons[row][col].setIcon(scaleImageIcon(pieceImages[index], boardButtons[row][col].getWidth(), boardButtons[row][col].getHeight()));
                 } else {
                         boardButtons[row][col].setIcon(null); // Clear icon for empty squares
@@ -253,7 +253,7 @@ public class AntichessUI {
         }
     }
 
-    private void addMoveToHistory(int startRow, int startCol, int endRow, int endCol) {
+    public void addMoveToHistory(int startRow, int startCol, int endRow, int endCol) {
         char[] columns = {'a', 'b', 'c', 'd', 'e', 'f', 'g', 'h'};
         Piece movingPiece = board.getPieceAt(startRow, startCol);
         Piece targetPiece = board.getPieceAt(endRow, endCol); // Piece at the destination square
@@ -330,14 +330,12 @@ public class AntichessUI {
         if (isWhiteTurn) {
             if (whitePlayer.isBot()) {
                 whitePlayer.makeRandomMove(boardArray);
-                isWhiteTurn = !isWhiteTurn;
             } else {
                 // Wait for human input
             }
         } else if (!isWhiteTurn) {
             if (blackPlayer.isBot()) {
                 blackPlayer.makeRandomMove(boardArray);
-                isWhiteTurn = !isWhiteTurn;
                 // System.out.println(isWhiteTurn);
             } else {
                 // Wait for human input

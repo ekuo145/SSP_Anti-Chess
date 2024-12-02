@@ -7,6 +7,7 @@ public class Player {
     private ChessBoard chessBoard;
     private boolean isBot; 
     private GameManager gameManager;
+    private AntichessUI ui;
 
     private Piece.Color turnColor = Piece.Color.WHITE;
 
@@ -31,6 +32,11 @@ public class Player {
 
     public void setGameManager(GameManager gameManager) {
         this.gameManager = gameManager;
+    }
+
+    // Setter for ui
+    public void setUI(AntichessUI ui) {
+        this.ui = ui;
     }
 
     public List<Move> getLegalMoves() {
@@ -88,8 +94,9 @@ public class Player {
         // If there are valid moves, randomly select one and execute it
         if (!possibleMoves.isEmpty()) {
             Move randomMove = possibleMoves.get(rand.nextInt(possibleMoves.size()));
-            System.out.println("Bot selected move: " + randomMove.getFromRow() + ", " + randomMove.getFromCol() + " to " + randomMove.getToRow() + ", " + randomMove.getToCol());
-            chessBoard.handleMove(randomMove, gameManager); // Execute the selected move
+            // System.out.println("Bot selected move: " + randomMove.getFromRow() + ", " + randomMove.getFromCol() + " to " + randomMove.getToRow() + ", " + randomMove.getToCol());
+            chessBoard.handleMove(randomMove, gameManager);
+            ui.addMoveToHistory(randomMove.getFromRow(), randomMove.getFromCol(), randomMove.getToRow(), randomMove.getToCol());
         } else {
             System.out.println("No legal moves available for the bot.");
         }
