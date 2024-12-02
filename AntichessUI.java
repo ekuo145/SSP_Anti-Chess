@@ -1,7 +1,6 @@
 import javax.swing.*;
 import javax.swing.table.DefaultTableModel;
 import java.awt.*;
-import java.util.ArrayList;
 import java.util.List;
 
 public class AntichessUI {
@@ -24,8 +23,49 @@ public class AntichessUI {
         
         this.board = new ChessBoard(this);
         this.player = new Player(Piece.Color.WHITE, false, board);
-        this.whitePlayer = new Player(Piece.Color.WHITE, false, board);  // Human player (White)
-        this.blackPlayer = new Player(Piece.Color.BLACK, true, board);   // Bot player (Black)
+
+        // Ask the user if they want to play against a bot or another human
+        String[] options = {"Play against Bot", "Play against Human"};
+        int choice = JOptionPane.showOptionDialog(
+            null,
+            "Choose your opponent:",
+            "Game Setup",
+            JOptionPane.DEFAULT_OPTION,
+            JOptionPane.PLAIN_MESSAGE,
+            null,
+            options,
+            options[0]
+        );
+
+        if (choice == 0) {
+            // Play against Bot
+            String[] botOptions = {"Play as White", "Play as Black"};
+            int botChoice = JOptionPane.showOptionDialog(
+                null,
+                "Choose your side:",
+                "Bot Game Setup",
+                JOptionPane.DEFAULT_OPTION,
+                JOptionPane.PLAIN_MESSAGE,
+                null,
+                botOptions,
+                botOptions[0]
+            );
+
+            if (botChoice == 0) {
+                // Play as White against Black Bot
+                this.whitePlayer = new Player(Piece.Color.WHITE, false, board);  // Human player (White)
+                this.blackPlayer = new Player(Piece.Color.BLACK, true, board);   // Bot player (Black)
+            } else {
+                // Play as Black against White Bot
+                this.whitePlayer = new Player(Piece.Color.WHITE, true, board);   // Bot player (White)
+                this.blackPlayer = new Player(Piece.Color.BLACK, false, board);  // Human player (Black)
+            }
+        } else {
+            // Play against Human
+            this.whitePlayer = new Player(Piece.Color.WHITE, false, board);  // Human player (White)
+            this.blackPlayer = new Player(Piece.Color.BLACK, false, board);  // Human player (Black)
+        }
+
         this.gameManager = new GameManager(whitePlayer, blackPlayer); // Initialize GameManager
         
         whitePlayer.setGameManager(gameManager); // Set GameManager for white player
