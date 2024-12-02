@@ -1,6 +1,7 @@
 import javax.swing.*;
 import javax.swing.table.DefaultTableModel;
 import java.awt.*;
+import java.util.ArrayList;
 import java.util.List;
 
 public class AntichessUI {
@@ -29,6 +30,10 @@ public class AntichessUI {
         
         whitePlayer.setGameManager(gameManager); // Set GameManager for white player
         blackPlayer.setGameManager(gameManager); // Set GameManager for black player
+
+
+    // Set up the custom position on the board
+        board.setupCustomPosition();
 
         
         board.startGame(); // Start the game
@@ -294,8 +299,5 @@ public class AntichessUI {
                 // Wait for human input
             }
         }
-
-
-
 }
 }

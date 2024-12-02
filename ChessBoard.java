@@ -1,5 +1,6 @@
 import java.util.Scanner;
 
+import javax.swing.JOptionPane;
 import javax.swing.SwingUtilities;
 
 import java.util.List;
@@ -358,47 +359,51 @@ public class ChessBoard {
         Piece piece = board[endRow][endCol];
         if (piece instanceof Piece) {
             if (piece.getType() == Piece.PieceType.PAWN) {
+            System.out.println("Piece is a Pawn");
             // Check if the pawn has reached the last row (opposite side)
-            if ((piece.getColor() == Piece.Color.WHITE && endRow == 0) || 
-                (piece.getColor() == Piece.Color.BLACK && endRow == 7)) {
-    
-                // Promotion logic - ask the player what they want to promote to
-                String choice = getPromotionChoice(piece.getColor());
-                switch (choice.toUpperCase()) {
-                    case "Q":
-                        board[endRow][endCol] = new Piece(Piece.PieceType.QUEEN, piece.getColor());
-                        break;
-                    case "R":
-                        board[endRow][endCol] = new Piece(Piece.PieceType.ROOK, piece.getColor());
-                        break;
-                    case "B":
-                        board[endRow][endCol] = new Piece(Piece.PieceType.BISHOP, piece.getColor());
-                        break;
-                    case "N":
-                        board[endRow][endCol] = new Piece(Piece.PieceType.KNIGHT, piece.getColor());
-                        break;
-                    case "K":
-                        board[endRow][endCol] = new Piece(Piece.PieceType.KING, piece.getColor());
-                        break;
-                    default:
-                        System.out.println("Invalid choice. Promoting to Queen by default.");
-                        board[endRow][endCol] = new Piece(Piece.PieceType.QUEEN, piece.getColor());
-                        break;
-                }
-                System.out.println("Pawn promoted to " + choice);
+            if ((piece.getColor() == Piece.Color.WHITE && endRow == 7) || 
+                (piece.getColor() == Piece.Color.BLACK && endRow == 0)) {
+                    promotePawn(endRow, endCol, piece.getColor());
             }
             }
         }
     }
     
-    // This method asks the player for their promotion choice
-    private String getPromotionChoice(Piece.Color color) {
-        // In a text-based system, prompt the player for input
-        Scanner scanner = new Scanner(System.in);
-        System.out.println("Pawn has reached the other side! Choose a piece to promote to (Q, R, B, N, K):");
-        scanner.close();
-        return scanner.nextLine();
+    private void promotePawn(int row, int col, Piece.Color color) {
+    // Display promotion options to the user
+    String[] options = {"Queen", "Rook", "Bishop", "Knight"};
+    String choice = (String) JOptionPane.showInputDialog(
+        null,
+        "Choose piece for promotion:",
+        "Pawn Promotion",
+        JOptionPane.PLAIN_MESSAGE,
+        null,
+        options,
+        options[0]
+    );
+
+    if (choice != null) {
+        Piece newPiece;
+        switch (choice) {
+            case "Queen":
+                newPiece = new Piece(Piece.PieceType.QUEEN, (color));
+                break;
+            case "Rook":
+                newPiece = new Piece(Piece.PieceType.ROOK,(color));
+                break;
+            case "Bishop":
+                newPiece = new Piece(Piece.PieceType.BISHOP, (color));
+                break;
+            case "Knight":
+                newPiece = new Piece(Piece.PieceType.KNIGHT, (color));
+                break;
+            default:
+                newPiece = new Piece(Piece.PieceType.QUEEN, (color)); // Default to Queen if no valid choice
+                break;
+        }
+        board[row][col] = newPiece;
     }
+}
     
 
     private boolean hasValidMove(Piece.Color playerColor) {
@@ -546,6 +551,32 @@ private List<Move> moveHistory = new ArrayList<>();
             throw new IllegalArgumentException("Row and column must be between 0 and 7.");
         }
         return board[row][col]; // Return the piece at the specified row and column
+    }
+
+
+    
+    /**
+     * Sets up a custom position on the chessboard.
+     * @param customPositions A list of pieces and their positions.
+     */
+    public void setupCustomPosition() {
+        // Clear the current board
+        for (int row = 0; row < 8; row++) {
+            for (int col = 0; col < 8; col++) {
+                board[row][col] = null;
+            }
+        }
+
+        // Set up white pawns
+        for (int i = 0; i < 8; i++) {
+            board[6][i] = new Piece(Piece.PieceType.PAWN, Piece.Color.WHITE);
+        }
+
+        // Set up black pawns
+        for (int i = 0; i < 8; i++) {
+            board[1][i] = new Piece(Piece.PieceType.PAWN, Piece.Color.BLACK);
+        }
+        printBoard();
     }
 
 }
