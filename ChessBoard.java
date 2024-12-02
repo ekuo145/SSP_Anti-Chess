@@ -1,9 +1,8 @@
-import java.util.Scanner;
-
 import javax.swing.JOptionPane;
 import javax.swing.SwingUtilities;
 
 import java.util.List;
+import java.util.Random;
 import java.util.ArrayList;
 
 
@@ -359,19 +358,20 @@ public class ChessBoard {
         Piece piece = board[endRow][endCol];
         if (piece instanceof Piece) {
             if (piece.getType() == Piece.PieceType.PAWN) {
-            System.out.println("Piece is a Pawn");
+            // System.out.println("Piece is a Pawn");
             // Check if the pawn has reached the last row (opposite side)
             if ((piece.getColor() == Piece.Color.WHITE && endRow == 7) || 
                 (piece.getColor() == Piece.Color.BLACK && endRow == 0)) {
                     promotePawn(endRow, endCol, piece.getColor());
-            }
+                }
             }
         }
     }
     
     private void promotePawn(int row, int col, Piece.Color color) {
+        Piece newPiece;
     // Display promotion options to the user
-    String[] options = {"Queen", "Rook", "Bishop", "Knight"};
+    String[] options = {"Queen", "Rook", "Bishop", "Knight", "King"};
     String choice = (String) JOptionPane.showInputDialog(
         null,
         "Choose piece for promotion:",
@@ -383,7 +383,6 @@ public class ChessBoard {
     );
 
     if (choice != null) {
-        Piece newPiece;
         switch (choice) {
             case "Queen":
                 newPiece = new Piece(Piece.PieceType.QUEEN, (color));
@@ -397,13 +396,26 @@ public class ChessBoard {
             case "Knight":
                 newPiece = new Piece(Piece.PieceType.KNIGHT, (color));
                 break;
+            case "King":
+                newPiece = new Piece(Piece.PieceType.KING, (color));
+                break;
             default:
                 newPiece = new Piece(Piece.PieceType.QUEEN, (color)); // Default to Queen if no valid choice
                 break;
         }
+    } else {
+        newPiece = new Piece(Piece.PieceType.QUEEN, (color)); // Default to Queen if no choice is made
+    }
         board[row][col] = newPiece;
     }
-}
+
+    public void makeRandomPromotionMove(int row, int col, Piece.Color color) {
+        Piece newPiece;
+        Piece[] promotionOptions = {new Piece(Piece.PieceType.QUEEN, (color)), new Piece(Piece.PieceType.ROOK,(color)), new Piece(Piece.PieceType.BISHOP,(color)), new Piece(Piece.PieceType.KNIGHT,(color)), new Piece(Piece.PieceType.KING,(color))};
+        Random random = new Random();
+        newPiece = promotionOptions[random.nextInt(promotionOptions.length)];
+        board[row][col] = newPiece;
+    }
     
 
     private boolean hasValidMove(Piece.Color playerColor) {
@@ -489,8 +501,11 @@ public class ChessBoard {
             lastMove = move;
 
             // printBoard();
-
+            if (gameManager.getCurrentPlayer().isBot()) {
+                makeRandomPromotionMove(endRow, endCol, currentPlayer);;
+            } else {
             checkPawnPromotion(endRow, endCol);
+            }
 
             // Alternate between players
             gameManager.switchTurn();

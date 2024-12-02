@@ -32,8 +32,8 @@ public class AntichessUI {
         blackPlayer.setGameManager(gameManager); // Set GameManager for black player
 
 
-    // Set up the custom position on the board
-        board.setupCustomPosition();
+    // Set up the custom position on the board when I want to
+        // board.setupCustomPosition();
 
         
         board.startGame(); // Start the game
@@ -299,5 +299,5 @@ public class AntichessUI {
                 // Wait for human input
             }
         }
-}
+    }
 }
