@@ -95,7 +95,7 @@ public class AntichessUI {
 
         
         JPanel mainPanel = new JPanel(new BorderLayout()); // Use BorderLayout for main panel
-        JPanel boardPanel = new JPanel(new GridLayout(9,9));
+        this.boardPanel = new JPanel(new GridLayout(9,9));
         // Create board buttons and set up action listeners
         boardButtons = new JButton[8][8];
 
@@ -212,19 +212,52 @@ public class AntichessUI {
         }
     }
 
-    // Method to flip the board orientation
+
     private void flipBoard() {
-        // Flip the board orientation (rotate 180 degrees)
+        boardPanel.removeAll(); // Clear the boardPanel for re-layout
+        
+        // Re-add the top-left empty corner
+        boardPanel.add(new JLabel("")); // Top-left corner is empty
+
+        char[] columns = {'a', 'b', 'c', 'd', 'e', 'f', 'g', 'h'};
+        int[] rows = {1, 2, 3, 4, 5, 6, 7, 8};
+
         JButton[][] flippedButtons = new JButton[8][8];
-        for (int row = 0; row < 4; row++) {
+        for (int row = 0; row < 8; row++) {
             for (int col = 0; col < 8; col++) {
-                flippedButtons[row][col] = boardButtons[row][col];
-                boardButtons[row][col] = boardButtons[7 - row][7 - col];
-                boardButtons[7 - row][7 - col] = flippedButtons[row][col];
+                // Flip the button positions
+                flippedButtons[row][col] = boardButtons[7 - row][7 - col];
             }
         }
-        // Update the board buttons to reflect the new orientation
-        updateBoard(board.getBoard());
+
+        // Add column labels
+        for (char column : columns) {
+            JLabel colLabel = new JLabel(Character.toString(column), SwingConstants.CENTER);
+            colLabel.setPreferredSize(new Dimension(80, 80)); // Adjust to match button size
+            boardPanel.add(colLabel); // Add to the top row
+        }
+
+        // Re-add row labels and board buttons in flipped order
+        for (int row = 0; row < 8; row++) {
+            // Add row label on the left side
+            JLabel rowLabel = new JLabel(Integer.toString(rows[row]), SwingConstants.CENTER); // Row label
+            rowLabel.setPreferredSize(new Dimension(80, 80)); // Adjust size to match the board buttons
+            boardPanel.add(rowLabel);
+
+            for (int col = 0; col < 8; col++) {
+                int displayRow = isBoardFlipped ? 7 - row : row;
+                int displayCol = isBoardFlipped ? 7 - col : col;
+
+                boardPanel.add(boardButtons[displayRow][displayCol]); // Add the button in flipped order
+            }
+        }
+    
+        // Update the board colors to ensure correct pattern after flip
+        resetBoardColors();
+    
+        // Refresh the UI to display the changes
+        boardPanel.revalidate();
+        boardPanel.repaint();
     }
 
     // Method to update the board buttons based on the current state of the chessboard
