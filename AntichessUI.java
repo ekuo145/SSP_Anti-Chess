@@ -11,7 +11,6 @@ public class AntichessUI {
     private boolean isWhiteTurn = true; // Track whose turn it is
     private boolean isBoardFlipped = false;
     private JPanel boardPanel;
-    private JButton flipButton;
 
     Player whitePlayer;
     Player blackPlayer;
@@ -114,13 +113,11 @@ public class AntichessUI {
 
          // Add the flip button
          JButton flipButton = new JButton("Flip Board");
-         flipButton.addActionListener(new ActionListener() {
-             @Override
-             public void actionPerformed(ActionEvent e) {
-                 isBoardFlipped = !isBoardFlipped;
-                 updateBoardDisplay();
-             }
-         });
+        flipButton.addActionListener(e -> {
+            isBoardFlipped = !isBoardFlipped;
+            System.out.println("Board Flipped");
+            flipBoard();
+        });
         
         
         // Add row labels and board buttons
@@ -213,6 +210,21 @@ public class AntichessUI {
             }
             resetBoardColors();
         }
+    }
+
+    // Method to flip the board orientation
+    private void flipBoard() {
+        // Flip the board orientation (rotate 180 degrees)
+        JButton[][] flippedButtons = new JButton[8][8];
+        for (int row = 0; row < 4; row++) {
+            for (int col = 0; col < 8; col++) {
+                flippedButtons[row][col] = boardButtons[row][col];
+                boardButtons[row][col] = boardButtons[7 - row][7 - col];
+                boardButtons[7 - row][7 - col] = flippedButtons[row][col];
+            }
+        }
+        // Update the board buttons to reflect the new orientation
+        updateBoard(board.getBoard());
     }
 
     // Method to update the board buttons based on the current state of the chessboard
