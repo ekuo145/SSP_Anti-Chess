@@ -114,7 +114,6 @@ public class AntichessUI {
          // Add the flip button
          JButton flipButton = new JButton("Flip Board");
         flipButton.addActionListener(e -> {
-            isBoardFlipped = !isBoardFlipped;
             System.out.println("Board Flipped");
             flipBoard();
         });
@@ -214,6 +213,7 @@ public class AntichessUI {
 
 
     private void flipBoard() {
+        isBoardFlipped = !isBoardFlipped;
         boardPanel.removeAll(); // Clear the boardPanel for re-layout
         
         // Re-add the top-left empty corner
