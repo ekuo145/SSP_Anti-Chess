@@ -58,6 +58,7 @@ public class AntichessUI {
                 this.whitePlayer = new Player(Piece.Color.WHITE, false, board);  // Human player (White)
                 this.blackPlayer = new Player(Piece.Color.BLACK, true, board);   // Bot player (Black)
                 blackPlayer.setUI(AntichessUI.this);
+                flipBoard();
             } else {
                 // Play as Black against White Bot
                 this.whitePlayer = new Player(Piece.Color.WHITE, true, board);   // Bot player (White)
@@ -68,6 +69,7 @@ public class AntichessUI {
             // Play against Human
             this.whitePlayer = new Player(Piece.Color.WHITE, false, board);  // Human player (White)
             this.blackPlayer = new Player(Piece.Color.BLACK, false, board);  // Human player (Black)
+            flipBoard();
         }
 
         this.gameManager = new GameManager(whitePlayer, blackPlayer); // Initialize GameManager
@@ -221,6 +223,7 @@ public class AntichessUI {
 
         char[] columns = {'a', 'b', 'c', 'd', 'e', 'f', 'g', 'h'};
         int[] rows = {1, 2, 3, 4, 5, 6, 7, 8};
+        int[] flippedRows = {8, 7, 6, 5, 4, 3, 2, 1};
 
         JButton[][] flippedButtons = new JButton[8][8];
         for (int row = 0; row < 8; row++) {
@@ -239,16 +242,20 @@ public class AntichessUI {
 
         // Re-add row labels and board buttons in flipped order
         for (int row = 0; row < 8; row++) {
-            // Add row label on the left side
-            JLabel rowLabel = new JLabel(Integer.toString(rows[row]), SwingConstants.CENTER); // Row label
-            rowLabel.setPreferredSize(new Dimension(80, 80)); // Adjust size to match the board buttons
-            boardPanel.add(rowLabel);
+            if (isBoardFlipped) {
+                JLabel rowLabel = new JLabel(Integer.toString(flippedRows[row]), SwingConstants.CENTER); // Row label
+                rowLabel.setPreferredSize(new Dimension(80, 80)); // Adjust size to match the board buttons
+                boardPanel.add(rowLabel);
+            } else {
+                // Add row label on the left side
+                JLabel rowLabel = new JLabel(Integer.toString(rows[row]), SwingConstants.CENTER); // Row label
+                rowLabel.setPreferredSize(new Dimension(80, 80)); // Adjust size to match the board buttons
+                boardPanel.add(rowLabel);
+            }
 
             for (int col = 0; col < 8; col++) {
                 int displayRow = isBoardFlipped ? 7 - row : row;
-                int displayCol = isBoardFlipped ? 7 - col : col;
-
-                boardPanel.add(boardButtons[displayRow][displayCol]); // Add the button in flipped order
+                boardPanel.add(boardButtons[displayRow][col]); // Add the button in flipped order
             }
         }
     
@@ -301,16 +308,30 @@ public class AntichessUI {
 
 
     public void resetBoardColors() {
-        for (int row = 0; row < 8; row++) {
+        if (isBoardFlipped) {
+            for (int row = 0; row < 8; row++) {
             for (int col = 0; col < 8; col++) {
                 // Reset to default colors (e.g., white and gray for a chessboard pattern)
                 if ((row + col) % 2 == 0) {
-                    boardButtons[row][col].setBackground(Color.GRAY);
-                } else {
                     boardButtons[row][col].setBackground(Color.WHITE);
+                } else {
+                    boardButtons[row][col].setBackground(Color.GRAY);
                 }
             }
         }
+        } else {
+            for (int row = 0; row < 8; row++) {
+                for (int col = 0; col < 8; col++) {
+                    // Reset to default colors (e.g., white and gray for a chessboard pattern)
+                    if ((row + col) % 2 == 0) {
+                        boardButtons[row][col].setBackground(Color.GRAY);
+                    } else {
+                        boardButtons[row][col].setBackground(Color.WHITE);
+                    }
+                }
+            }
+        }
+        
     }
 
     public void addMoveToHistory(int startRow, int startCol, int endRow, int endCol) {
